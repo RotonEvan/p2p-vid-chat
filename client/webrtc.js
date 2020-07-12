@@ -4,7 +4,9 @@ if (!location.hash) {
 }
 const roomHash = location.hash.substring(1);
 
-const WS_PORT = 5000; //make sure this matches the port for the webscokets server
+const server = require('../server/server');
+
+const WS_PORT = server.portnumber; //make sure this matches the port for the webscokets server
 
 var localUuid;
 var localDisplayName;

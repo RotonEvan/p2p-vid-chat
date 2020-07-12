@@ -1,7 +1,7 @@
 const HTTPS_PORT = 8443; //default port for https is 443
 const HTTP_PORT = 8001; //default port for http is 80
 
-const PORT = 5000;
+const PORT = process.env.PORT || 5000;
 // const INDEX = '/index.html';
 
 // const express = require('express');
@@ -24,9 +24,6 @@ const serverConfig = {
   key: fs.readFileSync('key.pem'),
   cert: fs.readFileSync('cert.pem'),
 };
-
-
-
 
 // ----------------------------------------------------------------------------------------
 

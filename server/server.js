@@ -19,12 +19,12 @@ const WebSocket = require('ws');
 
 console.log(`Listening to ${PORT}`);
 
-server.set('port', HTTPS_PORT);
-server.portnumber = HTTPS_PORT;
+// app.set('port', HTTPS_PORT);
+// app.portnumber = HTTPS_PORT;
 
-exports = module.exports = {
-  portnumber : port
-}
+// exports = module.exports = {
+//   portnumber : port
+// }
 
 // Yes, TLS is required
 const serverConfig = {

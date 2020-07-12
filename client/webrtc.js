@@ -1,3 +1,9 @@
+// Generate random room name if needed
+if (!location.hash) {
+  location.hash = Math.floor(Math.random() * 0xFFFFFF).toString(16);
+}
+const roomHash = location.hash.substring(1);
+
 const WS_PORT = 8443; //make sure this matches the port for the webscokets server
 
 var localUuid;
@@ -44,7 +50,7 @@ function start() {
         serverConnection = new WebSocket('wss://' + window.location.hostname + ':' + WS_PORT);
         serverConnection.onmessage = gotMessageFromServer;
         serverConnection.onopen = event => {
-          serverConnection.send(JSON.stringify({ 'displayName': localDisplayName, 'uuid': localUuid, 'dest': 'all' }));
+          serverConnection.send(JSON.stringify({ 'displayName': localDisplayName, 'uuid': localUuid, 'room': roomHash, 'dest': 'all' }));
           console.log("message sent through ws");
         }
       }).catch(errorHandler);
@@ -61,7 +67,7 @@ function gotMessageFromServer(message) {
   // Ignore messages that are not for us or from ourselves
   if (peerUuid == localUuid || (signal.dest != localUuid && signal.dest != 'all')) return;
 
-  if (signal.displayName && signal.dest == 'all') {
+  if (signal.displayName && signal.room == roomHash && signal.dest == 'all') {
     // set up peer connection object for a newcomer peer
     setUpPeer(peerUuid, signal.displayName);
     serverConnection.send(JSON.stringify({ 'displayName': localDisplayName, 'uuid': localUuid, 'dest': peerUuid }));

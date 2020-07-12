@@ -1,7 +1,7 @@
 const HTTPS_PORT = 8443; //default port for https is 443
 const HTTP_PORT = 8001; //default port for http is 80
 
-// const PORT = process.env.PORT || 8443;
+const PORT = process.env.PORT || 5000;
 // const INDEX = '/index.html';
 
 // const express = require('express');
@@ -9,14 +9,13 @@ const HTTP_PORT = 8001; //default port for http is 80
 const fs = require('fs');
 const http = require('http');
 const https = require('https');
-// const { WebSocket } = require('ws');
+const WebSocket = require('ws');
 
 // const server = express()
 //   .use((req, res) => res.sendFile(INDEX, { root: __dirname }))
 //   .listen(PORT, () => console.log(`Listening on ${PORT}`));
 
 // based on examples at https://www.npmjs.com/package/ws 
-const wss = new (require('ws')).Server({port: (process.env.PORT || 5000)}), webSockets = {}
 
 console.log(`Listening to ${PORT}`);
 
@@ -25,6 +24,9 @@ const serverConfig = {
   key: fs.readFileSync('key.pem'),
   cert: fs.readFileSync('cert.pem'),
 };
+
+
+
 
 // ----------------------------------------------------------------------------------------
 
@@ -48,6 +50,8 @@ const handleRequest = function (request, response) {
 const httpsServer = https.createServer(serverConfig, handleRequest);
 httpsServer.listen(HTTPS_PORT);
 
+const wss = new WebSocket.Server({port: PORT, server: httpsServer});
+
 // ----------------------------------------------------------------------------------------
 
 // Create a server for handling websocket calls
@@ -66,6 +70,7 @@ wss.on('connection', function (ws) {
 wss.broadcast = function (data) {
   this.clients.forEach(function (client) {
     if (client.readyState === WebSocket.OPEN) {
+      console.log("sending data");
       client.send(data);
     }
   });

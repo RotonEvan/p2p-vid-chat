@@ -71,7 +71,7 @@ function gotMessageFromServer(message) {
 
   if (signal.displayName && signal.room == roomHash && signal.dest == 'all') {
     // set up peer connection object for a newcomer peer
-    // setUpPeer(peerUuid, signal.displayName);
+    setUpPeer(peerUuid, signal.displayName);
     serverConnection.send(JSON.stringify({ 'displayName': localDisplayName, 'uuid': localUuid, 'room': roomHash, 'dest': peerUuid }));
 
   } else if (signal.displayName && signal.room == roomHash && signal.dest == localUuid) {
@@ -92,15 +92,17 @@ function gotMessageFromServer(message) {
 }
 
 function setUpPeer(peerUuid, displayName, initCall = false) {
+  if (initCall) {
+    peerConnections[peerUuid].pc.createOffer().then(description => createdDescription(description, peerUuid)).catch(errorHandler);
+    return;
+  }
   peerConnections[peerUuid] = { 'displayName': displayName, 'pc': new RTCPeerConnection(peerConnectionConfig) };
   peerConnections[peerUuid].pc.onicecandidate = event => gotIceCandidate(event, peerUuid);
   peerConnections[peerUuid].pc.ontrack = event => gotRemoteStream(event, peerUuid);
   peerConnections[peerUuid].pc.oniceconnectionstatechange = event => checkPeerDisconnect(event, peerUuid);
   peerConnections[peerUuid].pc.addStream(localStream);
 
-  if (initCall) {
-    peerConnections[peerUuid].pc.createOffer().then(description => createdDescription(description, peerUuid)).catch(errorHandler);
-  }
+  
 }
 
 function gotIceCandidate(event, peerUuid) {

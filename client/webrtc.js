@@ -25,7 +25,7 @@ function start() {
   localUuid = createUUID();
 
   // check if "&displayName=xxx" is appended to URL, otherwise alert user to populate
-  var urlParams = new URLSearchParams(window.location.origin);
+  var urlParams = new URLSearchParams(window.location.search);
   localDisplayName = urlParams.get('displayName') || prompt('Enter your name', '');
   document.getElementById('localVideoContainer').appendChild(makeLabel(localDisplayName));
 
@@ -49,7 +49,7 @@ function start() {
 
       // set up websocket and message all existing clients
       .then(() => {
-        serverConnection = new WebSocket('ws://' + window.location.hostname);
+        serverConnection = new WebSocket('ws://' + window.location.origin);
         serverConnection.onmessage = gotMessageFromServer;
         serverConnection.onopen = event => {
           serverConnection.send(JSON.stringify({ 'displayName': localDisplayName, 'uuid': localUuid, 'room': roomHash, 'dest': 'all' }));

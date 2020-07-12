@@ -45,6 +45,7 @@ function start() {
         serverConnection.onmessage = gotMessageFromServer;
         serverConnection.onopen = event => {
           serverConnection.send(JSON.stringify({ 'displayName': localDisplayName, 'uuid': localUuid, 'dest': 'all' }));
+          console.log("message sent through ws");
         }
       }).catch(errorHandler);
 

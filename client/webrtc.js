@@ -71,7 +71,7 @@ function gotMessageFromServer(message) {
 
   if (signal.displayName && signal.room == roomHash && signal.dest == 'all') {
     // set up peer connection object for a newcomer peer
-    setUpPeer(peerUuid, signal.displayName);
+    // setUpPeer(peerUuid, signal.displayName);
     serverConnection.send(JSON.stringify({ 'displayName': localDisplayName, 'uuid': localUuid, 'room': roomHash, 'dest': peerUuid }));
 
   } else if (signal.displayName && signal.room == roomHash && signal.dest == localUuid) {

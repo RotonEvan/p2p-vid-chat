@@ -18,6 +18,8 @@ const https = require('https');
 // based on examples at https://www.npmjs.com/package/ws 
 const wss = new (require('ws')).Server({port: (process.env.PORT || 5000)}), webSockets = {}
 
+console.log(`Listening to ${PORT}`);
+
 // Yes, TLS is required
 const serverConfig = {
   key: fs.readFileSync('key.pem'),

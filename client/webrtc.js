@@ -57,7 +57,6 @@ function start() {
           serverConnection.send(JSON.stringify({ 'displayName': localDisplayName, 'uuid': localUuid, 'room': roomHash, 'dest': 'all' }));
           console.log("message sent through ws");
         }
-        heartbeat();
       }).catch(errorHandler);
 
   } else {
@@ -65,12 +64,6 @@ function start() {
   }
 }
 
-function heartbeat() {
-  if (!serverConnection)  return;
-  if (serverConnection.readyState !== 1)  return;
-  serverConnection.send("heartbeat");
-  setTimeout(heartbeat, 2000);
-}
 
 function gotMessageFromServer(message) {
   var signal = JSON.parse(message.data);

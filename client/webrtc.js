@@ -73,13 +73,13 @@ function gotMessageFromServer(message) {
   // Ignore messages that are not for us or from ourselves
   if (peerUuid == localUuid || (signal.dest != localUuid && signal.dest != 'all')) return;
 
-  if (signal.displayName && signal.dest == 'all' && peerRoom == roomHash) {
+  if (signal.displayName && signal.dest == 'all') {
     // set up peer connection object for a newcomer peer
     console.log(`newcomer peer: ${peerUuid}`);
     setUpPeer(peerUuid, signal.displayName);
     serverConnection.send(JSON.stringify({ 'displayName': localDisplayName, 'uuid': localUuid, 'dest': peerUuid }));
 
-  } else if (signal.displayName && signal.dest == localUuid && peerRoom == roomHash) {
+  } else if (signal.displayName && signal.dest == localUuid) {
     // initiate call if we are the newcomer peer
     console.log(`local as newcomer peer: ${peerUuid} to ${localUuid}`);
     setUpPeer(peerUuid, signal.displayName, true);

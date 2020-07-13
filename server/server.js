@@ -52,6 +52,12 @@ wss.on('connection', function (ws) {
   ws.on('error', () => ws.terminate());
 });
 
+setInterval(() => {
+  wss.clients.forEach((client) => {
+    client.send(new Date().toTimeString());
+  });
+}, 1000);
+
 wss.broadcast = function (data) {
   this.clients.forEach(function (client) {
     if (client.readyState === WebSocket.OPEN) {

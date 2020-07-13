@@ -51,10 +51,10 @@ function start() {
 
       // set up websocket and message all existing clients
       .then(() => {
-        serverConnection = new WebSocket('wss://' + location.host + '/' + location.hash.substring(1));
+        serverConnection = new WebSocket('wss://' + location.host);
         serverConnection.onmessage = gotMessageFromServer;
         serverConnection.onopen = event => {
-          serverConnection.send(JSON.stringify({ 'displayName': localDisplayName, 'uuid': localUuid, 'dest': 'all' }));
+          serverConnection.send(JSON.stringify({ 'displayName': localDisplayName, 'uuid': localUuid, 'room': roomHash, 'dest': 'all' }));
           console.log("message sent through ws");
         }
       }).catch(errorHandler);
@@ -67,20 +67,23 @@ function start() {
 function gotMessageFromServer(message) {
   var signal = JSON.parse(message.data);
   var peerUuid = signal.uuid;
+  var peerRoom = signal.room;
 
   // Ignore messages that are not for us or from ourselves
   if (peerUuid == localUuid || (signal.dest != localUuid && signal.dest != 'all')) return;
 
   if (signal.displayName && signal.dest == 'all') {
     // set up peer connection object for a newcomer peer
+    console.log(`newcomer peer: ${peerUuid}`);
     setUpPeer(peerUuid, signal.displayName);
     serverConnection.send(JSON.stringify({ 'displayName': localDisplayName, 'uuid': localUuid, 'dest': peerUuid }));
 
   } else if (signal.displayName && signal.dest == localUuid) {
     // initiate call if we are the newcomer peer
+    console.log(`local as newcomer peer: ${peerUuid} to ${localUuid}`);
     setUpPeer(peerUuid, signal.displayName, true);
-
   } else if (signal.sdp) {
+    console.log(`sdp: ${peerUuid}`);
     peerConnections[peerUuid].pc.setRemoteDescription(new RTCSessionDescription(signal.sdp)).then(function () {
       // Only create answers in response to offers
       if (signal.sdp.type == 'offer') {
@@ -89,6 +92,7 @@ function gotMessageFromServer(message) {
     }).catch(errorHandler);
 
   } else if (signal.ice) {
+    console.log(`ice: ${peerUuid}`);
     peerConnections[peerUuid].pc.addIceCandidate(new RTCIceCandidate(signal.ice)).catch(errorHandler);
   }
 }
@@ -101,6 +105,7 @@ function setUpPeer(peerUuid, displayName, initCall = false) {
   peerConnections[peerUuid].pc.addStream(localStream);
 
   if (initCall) {
+    console.log(`call inititated: ${peerUuid} to ${localUuid}`);
     peerConnections[peerUuid].pc.createOffer().then(description => createdDescription(description, peerUuid)).catch(errorHandler);
   }
 }

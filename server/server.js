@@ -41,7 +41,7 @@ const wss = new WebSocket.Server({server: httpsServer});
 
 // Create a server for handling websocket calls
 // const wss = new WebSocketServer({ server: httpsServer });
-
+wss.room = [];
 wss.on('connection', function (ws) {
   ws.on('message', function (message) {
     // Broadcast any received message to all clients

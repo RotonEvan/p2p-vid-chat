@@ -52,7 +52,7 @@ function start() {
         serverConnection = new WebSocket('wss://' + location.host);
         serverConnection.onmessage = gotMessageFromServer;
         serverConnection.onopen = event => {
-          serverConnection.send(JSON.stringify({ 'displayName': localDisplayName, 'uuid': localUuid, 'room': roomHash, 'dest': 'all' }));
+          serverConnection.send(JSON.stringify({ 'displayName': localDisplayName, 'uuid': localUuid, 'dest': 'all' }));
           console.log("message sent through ws");
         }
       }).catch(errorHandler);
@@ -69,12 +69,12 @@ function gotMessageFromServer(message) {
   // Ignore messages that are not for us or from ourselves
   if (peerUuid == localUuid || (signal.dest != localUuid && signal.dest != 'all')) return;
 
-  if (signal.displayName && signal.room == roomHash && signal.dest == 'all') {
+  if (signal.displayName && signal.dest == 'all') {
     // set up peer connection object for a newcomer peer
     setUpPeer(peerUuid, signal.displayName);
-    serverConnection.send(JSON.stringify({ 'displayName': localDisplayName, 'uuid': localUuid, 'room': roomHash, 'dest': peerUuid }));
+    serverConnection.send(JSON.stringify({ 'displayName': localDisplayName, 'uuid': localUuid, 'dest': peerUuid }));
 
-  } else if (signal.displayName && signal.room == roomHash && signal.dest == localUuid) {
+  } else if (signal.displayName && signal.dest == localUuid) {
     // initiate call if we are the newcomer peer
     setUpPeer(peerUuid, signal.displayName, true);
 

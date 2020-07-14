@@ -1,51 +1,87 @@
 :root {
     --rowHeight: 98vh;
     --colWidth: 98vw;
-  }
+}
 
-  body{
-      background: black;
-  }
-  
-  .videos { 
-  
-      display: grid;
-      grid-gap: 5px;
-      grid-auto-flow: row;
-      
-      grid-template-columns: repeat(auto-fit, minmax(var(--colWidth), 1fr)) ;
-  }
-  
-  .videoContainer {
-      position: relative;
-      overflow: hidden;
-      
-      min-height: var(--rowHeight);
-      min-width: var(--colWidth);
-      
-  }
-  
-  .videoContainer video {
-  
-      position: absolute;
-      left: 0;
-      bottom: 0;
-      height: auto;
-      width: 100%;
-  }
-  
-  .videoLabel {
-      color: white;
-      font: bold 18px Arial, Sans-Serif;
-      line-height: 18px;
-      height: 18px;
-      
-      background: rgba(0, 0, 0, 0.55);
-      
-      position: absolute;
-      left: 0;
-      bottom: 0;
-      padding: 4px;
-  }
+body {
+    background: black;
+}
 
-  /* ui for buttons to be added */
+.videos { 
+
+    display: grid;
+    grid-gap: 5px;
+    grid-auto-flow: row;
+    
+    grid-template-columns: repeat(auto-fit, minmax(var(--colWidth), 1fr)) ;
+}
+
+.videoContainer {
+    position: relative;
+    overflow: hidden;
+    
+    min-height: var(--rowHeight);
+    min-width: var(--colWidth);
+    
+}
+
+.videoContainer video {
+
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    height: auto;
+    width: 100%;
+}
+
+.videoLabel {
+    color: white;
+    font: bold 18px Arial, Sans-Serif;
+    line-height: 18px;
+    height: 18px;
+    
+    background: rgba(0, 0, 0, 0.55);
+    
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    padding: 4px;
+}
+
+/* ui for buttons to be added */
+
+.buttons {
+    position: absolute;
+    width: 100%;
+    z-index: 9;
+    left: 0;
+    right: 0;
+    top: 80%;
+    bottom: 0;
+    margin: auto;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+}
+
+.buttons button {
+    position: relative;
+    margin: 0 2%;
+    display: inline-block;
+    text-decoration: none;
+    background: #87befd;
+    color: #FFF;
+    width: 60px;
+    height: 60px;
+    line-height: 60px;
+    border-radius: 50%;
+    text-align: center;
+    vertical-align: middle;
+    overflow: hidden;
+    transition: .4s;
+}
+
+.buttons button:hover {
+background: #668ad8;
+}

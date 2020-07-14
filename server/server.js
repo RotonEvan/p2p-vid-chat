@@ -4,7 +4,7 @@ const HTTP_PORT = 8001; //default port for http is 80
 const fs = require('fs');
 const http = require('http');
 const https = require('https');
-// based on examples at https://www.npmjs.com/package/ws 
+// based on examples at https://www.npmjs.com/package/ws
 const WebSocket = require('ws');
 
 // Yes, TLS is required
@@ -54,7 +54,7 @@ wss.on('connection', function (ws) {
 
 setInterval(() => {
   wss.clients.forEach((client) => {
-    client.send(new Date().toTimeString());
+    client.send(JSON.stringify(new Date().toTimeString()));
   });
 }, 1000);
 

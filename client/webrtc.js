@@ -103,7 +103,7 @@ function setUpPeer(peerUuid, displayName, initCall = false) {
   peerConnections[peerUuid].pc.onicecandidate = event => gotIceCandidate(event, peerUuid);
   peerConnections[peerUuid].pc.ontrack = event => gotRemoteStream(event, peerUuid);
   peerConnections[peerUuid].pc.oniceconnectionstatechange = event => checkPeerDisconnect(event, peerUuid);
-  peerConnections[peerUuid].pc.addTrack(localStream);
+  peerConnections[peerUuid].pc.addStream(localStream);
 
   if (initCall) {
     console.log(`call inititated: ${peerUuid} to ${localUuid}`);

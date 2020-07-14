@@ -194,7 +194,15 @@ function createUUID() {
 }
 
 function toggleAudio() {
-  console.log("check1");
+  document.getElementById('audio').classList.toggle('off');
+  document.getElementById('audio').classList.toggle('on');
   localStream.getAudioTracks()[0].enabled = !(localStream.getAudioTracks()[0].enabled);
   console.log(localStream.getAudioTracks()[0].enabled);
-}
+};
+
+function toggleVideo() {
+  document.getElementById('video').classList.toggle('off');
+  document.getElementById('video').classList.toggle('on');
+  localStream.getVideoTracks()[0].enabled = !(localStream.getVideoTracks()[0].enabled);
+  console.log(localStream.getVideoTracks()[0].enabled);
+};

@@ -70,7 +70,7 @@ body {
     margin: 0 2%;
     display: inline-block;
     text-decoration: none;
-    background: #87befd;
+    font-size: 24px;
     color: #FFF;
     width: 60px;
     height: 60px;
@@ -83,5 +83,13 @@ body {
 }
 
 .buttons button:hover {
-background: #668ad8;
+    background: #e43538;
+}
+
+.off {
+    background: none;
+}
+
+.on {
+    background: #e43538;
 }

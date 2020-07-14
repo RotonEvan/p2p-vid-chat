@@ -23,6 +23,9 @@ const handleRequest = function (request, response) {
  if (request.url === '/webrtc.js') {
     response.writeHead(200, { 'Content-Type': 'application/javascript' });
     response.end(fs.readFileSync('client/webrtc.js'));
+  } else if (request.url === '/font-awesome.min.css') {
+    response.writeHead(200, { 'Content-Type': 'text/css' });
+    response.end(fs.readFileSync('client/font-awesome.min.css'));
   } else if (request.url === '/style.css') {
     response.writeHead(200, { 'Content-Type': 'text/css' });
     response.end(fs.readFileSync('client/style.css'));

@@ -43,8 +43,10 @@ function start() {
 
   // set up local video stream
   if (navigator.mediaDevices.getUserMedia) {
+    console.log("local video");
     navigator.mediaDevices.getUserMedia(constraints)
       .then(stream => {
+        console.log("local stream");
         localStream = stream;
         document.getElementById('localVideo').srcObject = stream;
       }).catch(errorHandler)
@@ -210,3 +212,9 @@ function toggleVideo() {
   localStream.getVideoTracks()[0].enabled = !(localStream.getVideoTracks()[0].enabled);
   console.log(localStream.getVideoTracks()[0].enabled);
 };
+
+function leaveRoom() {
+  if (confirm("Leave meeting?")) {
+    window.location = "https://p2p-vid-chat.herokuapp.com";
+  }
+}

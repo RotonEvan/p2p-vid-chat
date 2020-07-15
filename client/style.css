@@ -83,7 +83,7 @@ body {
     overflow: hidden;
     transition: .4s;
 }
-@media (min-width: 600px) {
+@media (min-width: 1024px) {
     .buttons a:hover {
         background: #e43538;
     }
@@ -97,7 +97,7 @@ body {
     background: #e43538;
 }
 
-@media (max-width: 600px) {
+@media (max-width: 1024px) {
     .buttons a {
         width: 3rem !important;
         height: 3rem !important;

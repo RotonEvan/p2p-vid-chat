@@ -7,3 +7,4 @@
 - webRTC stream duplication and forwarding
 - ~host user video mirror~
 - mute, video off icons on video stream
+- screenshare

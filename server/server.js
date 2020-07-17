@@ -36,7 +36,7 @@ const handleRequest = function (request, response) {
     response.writeHead(200, { 'Content-Type': 'text/css' });
     response.end(fs.readFileSync('client/css/bootstrap.min.css'));
   } else if (request.url === '/css/animsition.min.css') {
-    response.writeHead(200, { 'Content-Type': 'text/css' });
+    response.writeHead(200, { 'Content-Type': 'text/html' });
     response.end(fs.readFileSync('client/css/animsition.min.css'));
   } else if (request.url === '/favicon/apple-touch-icon.png') {
     response.writeHead(200, { 'Content-Type': 'image/png' });

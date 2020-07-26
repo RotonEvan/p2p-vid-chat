@@ -43,7 +43,7 @@ function start() {
       height: {ideal: 240},
       frameRate: {min: 1, max: 20},
       // facingMode: {exact: frontCam ? 'user' : 'environment'},
-      facingMode: {exact: 'user'},
+      // facingMode: {exact: 'user'},
     },
     audio: {
       googEchoCancellation: true,

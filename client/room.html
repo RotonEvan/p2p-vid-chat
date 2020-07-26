@@ -8,14 +8,22 @@
   <link rel="stylesheet" href="style.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
   <meta charset="UTF-8">
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <script src="https://webrtc.github.io/adapter/adapter-latest.js"></script>
   <script src="webrtc.js"></script>
+  <script src="js/script.js"></script>
 </head>
 
 <body>
   <nav class="navbar">
-    <a href="#">fybrrChat</a>
+    <div class="navbar-title">
+      <a href="#">fybrrChat</a>
+    </div>
+    <div class="navbar-right">
+      <button onclick="copyLink()" class="copy-button" title="Copy Meeting Link">Copy Meet Link  <i class="fa fa-copy"></i></button>
+      <a href="#" onclick="" title="Leave Meeting"><i class="fa fa-sign-out" aria-hidden="true"></i></a>
+    </div>
   </nav>
   <div id="videos" class="videos">
 

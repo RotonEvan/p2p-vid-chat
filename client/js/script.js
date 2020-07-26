@@ -7,7 +7,11 @@ function copyLink() {
   dummy.select();
   document.execCommand('copy');
   document.body.removeChild(dummy);
-  alert("Copied the text: " + dummy.value);
+  //alert("Copied the text: " + dummy.value);
+  document.getElementsByClassName('copy-button')[0].innerHTML = 'Copied!  <i class="fa fa-check"></i>';
+  setTimeout(function() {
+  document.getElementsByClassName('copy-button')[0].innerHTML = 'Copy Meet Link  <i class="fa fa-copy"></i>';
+}, 4000);
 };
 function getLink() {
   // alert("Getlink called");

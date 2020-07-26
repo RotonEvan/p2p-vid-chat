@@ -42,7 +42,7 @@ function start() {
       width: {ideal: 320},
       height: {ideal: 240},
       frameRate: {min: 1, max: 20},
-      facingMode: frontCam ? 'user' : 'environment',
+      facingMode: {exact: frontCam ? 'user' : 'environment'},
     },
     audio: {
       googEchoCancellation: true,
@@ -262,7 +262,7 @@ function toggleCamera() {
 }
 
 function flip() {
-  constraints.video.facingMode = frontCam ? 'user' : 'environment';
+  constraints.video.facingMode = {exact: frontCam ? 'user' : 'environment'};
   navigator.mediaDevices.getUserMedia(constraints)
       .then(stream => {
         console.log("local stream");

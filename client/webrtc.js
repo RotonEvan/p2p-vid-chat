@@ -10,6 +10,7 @@ const roomHash = location.hash.substring(1);
 
 var localUuid;
 var localDisplayName;
+var localIsMute = false;
 var localStream;
 var serverConnection;
 var peerConnections = {}; // key is uuid, values are peer connection object and user defined display name string
@@ -28,6 +29,7 @@ function start() {
   var urlParams = new URLSearchParams(window.location.search);
   localDisplayName = urlParams.get('displayName') || prompt('Enter your name', '');
   document.getElementById('localVideoContainer').appendChild(makeLabel(localDisplayName));
+  document.getElementById('localVideoContainer').appendChild(makeAudioLabel(localIsMute));
 
   localUuid = localDisplayName;
 
@@ -53,10 +55,10 @@ function start() {
 
       // set up websocket and message all existing clients
       .then(() => {
-        serverConnection = new WebSocket('wss://' + location.host);
+        serverConnection = new WebSocket('ws://' + location.host);
         serverConnection.onmessage = gotMessageFromServer;
         serverConnection.onopen = event => {
-          serverConnection.send(JSON.stringify({ 'displayName': localDisplayName, 'uuid': localUuid, 'room': roomHash, 'dest': 'all' }));
+          serverConnection.send(JSON.stringify({ 'displayName': localDisplayName, 'isMute': localIsMute, 'uuid': localUuid, 'room': roomHash, 'dest': 'all' }));
           console.log("message sent through ws");
         }
       }).catch(errorHandler);
@@ -78,13 +80,13 @@ function gotMessageFromServer(message) {
   if (signal.displayName && peerRoom == roomHash && signal.dest == 'all') {
     // set up peer connection object for a newcomer peer
     console.log(`newcomer peer: ${peerUuid}`);
-    setUpPeer(peerUuid, signal.displayName);
-    serverConnection.send(JSON.stringify({ 'displayName': localDisplayName, 'uuid': localUuid, 'room': roomHash, 'dest': peerUuid }));
+    setUpPeer(peerUuid, signal.displayName, signal.isMute);
+    serverConnection.send(JSON.stringify({ 'displayName': localDisplayName, 'isMute': localIsMute, 'uuid': localUuid, 'room': roomHash, 'dest': peerUuid }));
 
   } else if (signal.displayName && peerRoom == roomHash && signal.dest == localUuid) {
     // initiate call if we are the newcomer peer
     console.log(`local as newcomer peer: ${peerUuid} to ${localUuid}`);
-    setUpPeer(peerUuid, signal.displayName, true);
+    setUpPeer(peerUuid, signal.displayName, signal.isMute, true);
   } else if (signal.sdp) {
     console.log(`sdp: ${peerUuid}`);
     peerConnections[peerUuid].pc.setRemoteDescription(new RTCSessionDescription(signal.sdp)).then(function () {
@@ -97,11 +99,14 @@ function gotMessageFromServer(message) {
   } else if (signal.ice) {
     console.log(`ice: ${peerUuid}`);
     peerConnections[peerUuid].pc.addIceCandidate(new RTCIceCandidate(signal.ice)).catch(errorHandler);
-  }
+  } else if (signal.dest == 'all-audio-change' && peerRoom == roomHash) {
+    console.log("audio state change for peer : " + peerUuid);
+    changeAudioLabel(peerUuid);
+  } 
 }
 
-function setUpPeer(peerUuid, displayName, initCall = false) {
-  peerConnections[peerUuid] = { 'displayName': displayName, 'pc': new RTCPeerConnection(peerConnectionConfig) };
+function setUpPeer(peerUuid, displayName, isMute, initCall = false) {
+  peerConnections[peerUuid] = { 'displayName': displayName, 'isMute': isMute, 'pc': new RTCPeerConnection(peerConnectionConfig) };
   peerConnections[peerUuid].pc.onicecandidate = event => gotIceCandidate(event, peerUuid);
   peerConnections[peerUuid].pc.ontrack = event => gotRemoteStream(event, peerUuid);
   peerConnections[peerUuid].pc.oniceconnectionstatechange = event => checkPeerDisconnect(event, peerUuid);
@@ -142,6 +147,7 @@ function gotRemoteStream(event, peerUuid) {
     vidContainer.setAttribute('class', 'videoContainer');
     vidContainer.appendChild(vidElement);
     vidContainer.appendChild(makeLabel(peerConnections[peerUuid].displayName));
+    vidContainer.appendChild(makeAudioLabel(peerConnections[peerUuid].isMute));
 
     document.getElementById('videos').appendChild(vidContainer);
 
@@ -185,6 +191,24 @@ function makeLabel(label) {
   return vidLabel;
 }
 
+function makeAudioLabel(label) {
+  var vidLabel = document.createElement('div');
+  var icon = document.createElement('i');
+  icon.setAttribute('class', 'fa fa-microphone-slash');
+  icon.setAttribute('aria-hidden', 'true');
+  vidLabel.appendChild(icon);
+  if (!label) {vidLabel.setAttribute('class', 'audioUnmute');}
+  else  {vidLabel.setAttribute('class', 'audioMute');};
+  vidLabel.setAttribute('id', 'audioStatus');
+  return vidLabel;
+}
+
+function changeAudioLabel(peerUuid) {
+  var vidElement = document.getElementById('remoteVideo_'+peerUuid).children[2];
+  vidElement.classList.toggle('audioUnmute');
+  vidElement.classList.toggle('audioMute');
+}
+
 function errorHandler(error) {
   console.log(error);
 }
@@ -202,7 +226,11 @@ function createUUID() {
 function toggleAudio() {
   document.getElementById('audio').classList.toggle('off');
   document.getElementById('audio').classList.toggle('on');
+  document.getElementById('audioStatus').classList.toggle('audioUnmute');
+  document.getElementById('audioStatus').classList.toggle('audioMute');
   localStream.getAudioTracks()[0].enabled = !(localStream.getAudioTracks()[0].enabled);
+  localIsMute = !(localIsMute);
+  serverConnection.send(JSON.stringify({ 'displayName': localDisplayName, 'isMute': localIsMute, 'uuid': localUuid, 'room': roomHash, 'dest': 'all-audio-change' }));
   console.log(localStream.getAudioTracks()[0].enabled);
 };
 

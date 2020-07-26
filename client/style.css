@@ -54,6 +54,36 @@ body {
     padding: 4px;
 }
 
+.audioMute {
+    color: white;
+    font: bold 20px Arial, Sans-Serif;
+    line-height: 2.5rem;
+    height: 2.8rem;
+    width: 2.8rem;
+    box-sizing: border-box;
+    border-radius: 50%;
+    background: #e43538;
+    text-align: center;
+    position: absolute;
+    right: 5px;
+    bottom: 5px;
+    padding: 4px;
+}
+
+.audioUnmute {
+    color: white;
+    font: bold 18px Arial, Sans-Serif;
+    line-height: 18px;
+    height: 18px;
+    display: none;
+    background: #e43538;
+
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    padding: 4px;
+}
+
 /* ui for buttons to be added */
 
 .buttons {

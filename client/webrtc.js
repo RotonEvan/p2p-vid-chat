@@ -14,6 +14,9 @@ var localIsMute = false;
 var localStream;
 var serverConnection;
 var peerConnections = {}; // key is uuid, values are peer connection object and user defined display name string
+var localVideo;
+let frontCam = true;
+var constraints = {};
 
 var peerConnectionConfig = {
   'iceServers': [
@@ -34,13 +37,22 @@ function start() {
   localUuid = localDisplayName;
 
   // specify no audio for user media
-  var constraints = {
+  constraints = {
     video: {
-      width: {max: 320},
-      height: {max: 240},
-      frameRate: {max: 30},
+      width: {ideal: 320},
+      height: {ideal: 240},
+      frameRate: {min: 1, max: 20},
+      facingMode: frontCam ? 'user' : 'environment',
     },
-    audio: true,
+    audio: {
+      googEchoCancellation: true,
+      googAutoGainControl: true,
+      googNoiseSuppression: true,
+      googHighpassFilter: true,
+      googEchoCancellation2: true,
+      googAutoGainControl2: true,
+      googNoiseSuppression2: true,
+    },
   };
 
   // set up local video stream
@@ -51,11 +63,12 @@ function start() {
         console.log("local stream");
         localStream = stream;
         document.getElementById('localVideo').srcObject = stream;
+        localVideo = document.getElementById('localVideo');
       }).catch(errorHandler)
 
       // set up websocket and message all existing clients
       .then(() => {
-        serverConnection = new WebSocket('wss://' + location.host);
+        serverConnection = new WebSocket('ws://' + location.host);
         serverConnection.onmessage = gotMessageFromServer;
         serverConnection.onopen = event => {
           serverConnection.send(JSON.stringify({ 'displayName': localDisplayName, 'isMute': localIsMute, 'uuid': localUuid, 'room': roomHash, 'dest': 'all' }));
@@ -240,6 +253,23 @@ function toggleVideo() {
   localStream.getVideoTracks()[0].enabled = !(localStream.getVideoTracks()[0].enabled);
   console.log(localStream.getVideoTracks()[0].enabled);
 };
+
+function toggleCamera() {
+  localVideo.pause();
+  localVideo.srcObject = null;
+  frontCam = !(frontCam);
+  flip();
+}
+
+function flip() {
+  constraints.video.facingMode = frontCam ? 'user' : 'environment';
+  navigator.mediaDevices.getUserMedia(constraints)
+      .then(stream => {
+        console.log("local stream");
+        localStream = stream;
+        localVideo.srcObject = stream;
+      }).catch(errorHandler);
+}
 
 function leaveRoom() {
   if (confirm("Leave meeting?")) {

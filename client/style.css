@@ -133,12 +133,16 @@ body {
     background: #e43538;
 }
 
+@media (min-width: 1025px) {
+    .flip {
+        display: none !important;
+    }
+}
+
 @media (max-width: 1024px) {
     .buttons a {
         width: 3rem !important;
         height: 3rem !important;
         line-height: 3rem !important;
     }
-
-
 }

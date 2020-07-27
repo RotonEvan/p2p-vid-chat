@@ -60,7 +60,15 @@ function start() {
       height: {ideal: 240},
       frameRate: {min: 1, max: 20}
     },
-    audio: true
+    audio: {
+      googEchoCancellation: true,
+      googAutoGainControl: true,
+      googNoiseSuppression: true,
+      googHighpassFilter: true,
+      googEchoCancellation2: true,
+      googAutoGainControl2: true,
+      googNoiseSuppression2: true
+    }
   };
 
   // set up local video stream

@@ -38,23 +38,25 @@ function start() {
 
   // specify no audio for user media
   constraints = {
-    video: {
-      width: {max: 320},
-      height: {max: 240},
-      frameRate: {max: 20},
-      // facingMode: frontCam ? 'user' : 'environment',
-      // facingMode: 'user',
-      // facingMode: 'environment',
-    },
-    audio: {
-      googEchoCancellation: true,
-      googAutoGainControl: true,
-      googNoiseSuppression: true,
-      googHighpassFilter: true,
-      googEchoCancellation2: true,
-      googAutoGainControl2: true,
-      googNoiseSuppression2: true,
-    },
+    // video: {
+    //   width: {max: 320},
+    //   height: {max: 240},
+    //   frameRate: {max: 20},
+    //   // facingMode: frontCam ? 'user' : 'environment',
+    //   // facingMode: 'user',
+    //   // facingMode: 'environment',
+    // },
+    // audio: {
+    //   googEchoCancellation: true,
+    //   googAutoGainControl: true,
+    //   googNoiseSuppression: true,
+    //   googHighpassFilter: true,
+    //   googEchoCancellation2: true,
+    //   googAutoGainControl2: true,
+    //   googNoiseSuppression2: true,
+    // },
+    video: true,
+    audio: true
   };
 
   // set up local video stream

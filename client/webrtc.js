@@ -39,11 +39,12 @@ function start() {
   // specify no audio for user media
   constraints = {
     video: {
-      width: {ideal: 320},
-      height: {ideal: 240},
+      width: {max: 320},
+      height: {max: 240},
       frameRate: {min: 1, max: 20},
-      facingMode: {exact: frontCam ? 'user' : 'environment'},
-      // facingMode: {exact: 'user'},
+      // facingMode: frontCam ? 'user' : 'environment',
+      // facingMode: 'user',
+      // facingMode: 'environment',
     },
     audio: {
       googEchoCancellation: true,
@@ -124,7 +125,10 @@ function setUpPeer(peerUuid, displayName, isMute, initCall = false) {
   peerConnections[peerUuid].pc.onicecandidate = event => gotIceCandidate(event, peerUuid);
   peerConnections[peerUuid].pc.ontrack = event => gotRemoteStream(event, peerUuid);
   peerConnections[peerUuid].pc.oniceconnectionstatechange = event => checkPeerDisconnect(event, peerUuid);
-  peerConnections[peerUuid].pc.addStream(localStream);
+  localStream.getTracks().forEach(t => {
+    peerConnections[peerUuid].pc.addTrack(t, localStream);
+  });
+  // peerConnections[peerUuid].pc.addStream(localStream);
 
   if (initCall) {
     console.log(`call inititated: ${peerUuid} to ${localUuid}`);
@@ -258,17 +262,29 @@ function toggleVideo() {
 function toggleCamera() {
   localVideo.pause();
   localVideo.srcObject = null;
+  if( localStream == null ) return;
+  // we need to flip, stop everything
+  localStream.getTracks().forEach(t => {
+    t.stop();
+  });
   frontCam = !(frontCam);
   flip();
 }
 
 function flip() {
-  constraints.video.facingMode = {exact: frontCam ? 'user' : 'environment'};
+  constraints.video = {facingMode: frontCam ? 'user' : 'environment'};
   navigator.mediaDevices.getUserMedia(constraints)
       .then(stream => {
         console.log("local stream");
         localStream = stream;
+        for (var peer in peerConnections) {
+          localStream.getTracks().forEach(t => {
+            peerConnections[peer].pc.addTrack(t, localStream);
+          });
+        }
+        console.log("stream updated");
         localVideo.srcObject = stream;
+        localVideo.play();
       }).catch(errorHandler);
 }
 

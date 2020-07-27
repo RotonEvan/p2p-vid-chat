@@ -55,7 +55,11 @@ function start() {
     //   googAutoGainControl2: true,
     //   googNoiseSuppression2: true,
     // },
-    video: true,
+    video: {
+      width: {ideal: 320},
+      height: {ideal: 240},
+      frameRate: {min: 1, max: 20}
+    },
     audio: true
   };
 

@@ -41,7 +41,7 @@ function start() {
     video: {
       width: {max: 320},
       height: {max: 240},
-      frameRate: {min: 1, max: 20},
+      frameRate: {max: 20},
       // facingMode: frontCam ? 'user' : 'environment',
       // facingMode: 'user',
       // facingMode: 'environment',

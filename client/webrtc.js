@@ -114,7 +114,7 @@ function gotMessageFromServer(message) {
   } else if (signal.dest == 'all-audio-change' && peerRoom == roomHash) {
     console.log("audio state change for peer : " + peerUuid);
     changeAudioLabel(peerUuid);
-  } 
+  }
 }
 
 function setUpPeer(peerUuid, displayName, isMute, initCall = false) {
@@ -187,14 +187,36 @@ function updateLayout() {
 
   var numVideos = Object.keys(peerConnections).length + 1; // add one to include local video
 
-  if (numVideos > 1 && numVideos <= 4) { // 2x2 grid
-    rowHeight = '48vh';
-    colWidth = '48vw';
-  } else if (numVideos > 4) { // 3x3 grid
-    rowHeight = '32vh';
-    colWidth = '32vw';
+  if(numVideos == 1)
+  {
+    var rowHeight = '90vh';
+    var colWidth = '98vw';
   }
-
+  else if(numVideos == 2)
+  {
+    var rowHeight = '90vh';
+    var colWidth = '48vw';
+  }
+  else if(numVideos > 2 && numVideos < 5)
+  {
+    var rowHeight = '44vh';
+    var colWidth = '48vw';
+  }
+  else if(numVideos >=5 && numVideos < 7)
+  {
+    var rowHeight = '44vh';
+    var colWidth = '31.9vw';
+  }
+  else if(numVideos >6 && numVideos < 10)
+  {
+    var rowHeight = '29vh';
+    var colWidth = '31.9vw';
+  }
+  else if(numVideos >9 && numVideos < 13)
+  {
+    var rowHeight = '29vh';
+    var colWidth = '23.7vw';
+  }
   document.documentElement.style.setProperty(`--rowHeight`, rowHeight);
   document.documentElement.style.setProperty(`--colWidth`, colWidth);
 }

@@ -204,13 +204,6 @@ function updateLayout() {
 
   var numVideos = Object.keys(peerConnections).length + 1; // add one to include local video
 
-  if (numVideos > 1 && numVideos <= 4) { // 2x2 grid
-    rowHeight = '48vh';
-    colWidth = '48vw';
-  } else if (numVideos > 4) { // 3x3 grid
-    rowHeight = '32vh';
-    colWidth = '32vw';
-  }
   if(numVideos == 1)
   {
     var rowHeight = '90vh';

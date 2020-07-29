@@ -173,6 +173,8 @@ function gotRemoteStream(event, peerUuid) {
   }
 }
 
+var count = 0;
+
 function checkPeerDisconnect(event, peerUuid) {
   var state = peerConnections[peerUuid].pc.iceConnectionState;
   console.log(`connection with peer ${peerUuid} ${state}`);
@@ -182,6 +184,7 @@ function checkPeerDisconnect(event, peerUuid) {
   //   updateLayout();
   // }
   if (state === "failed") {
+    console.log(count);
     if (peerConnections[peerUuid].pc.restartIce) {
       peerConnections[peerUuid].pc.restartIce();
     } else {
@@ -327,7 +330,7 @@ function leaveRoom() {
   }
 }
 
-window.onunload = function() {
+window.onbeforeunload = function() {
   var result = confirm ("Leave meeting? ");
   if (result) {
     serverConnection.send(JSON.stringify({ 'displayName': localDisplayName, 'isMute': localIsMute, 'uuid': localUuid, 'room': roomHash, 'dest': "all-close-div" }));

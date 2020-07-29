@@ -4,7 +4,8 @@
 }
 
 body {
-    background: black;
+    background: #ECEFF1;
+    padding-top: 6.5vh;
 }
 
 .videos {
@@ -36,8 +37,9 @@ body {
     position: absolute;
     left: 0;
     bottom: 0;
-    height: auto;
+    height: 100%;
     width: 100%;
+    object-fit: cover;
 }
 
 .videoLabel {
@@ -127,7 +129,7 @@ body {
 }
 
 .off {
-    background: rgba(255, 255, 255, 0.2);
+    background: rgba(0, 0, 0, 0.2);
 }
 
 .on {
@@ -147,9 +149,7 @@ body {
         line-height: 3rem !important;
     }
 }
- body{
-   padding-top: 6.5vh;
- }
+
 
 .navbar{
   height:7vh;

@@ -114,6 +114,9 @@ function gotMessageFromServer(message) {
   } else if (signal.dest == 'all-audio-change' && peerRoom == roomHash) {
     console.log("audio state change for peer : " + peerUuid);
     changeAudioLabel(peerUuid);
+  } else if (signal.dest == 'all-close-div' && peerRoom == roomHash) {
+    console.log("removing video div of peer : " + peerUuid);
+    removeDiv(peerUuid);
   }
 }
 
@@ -322,4 +325,19 @@ function leaveRoom() {
   if (confirm("Leave meeting?")) {
     window.location = "https://p2p-vid-chat.herokuapp.com";
   }
+}
+
+window.onunload = function() {
+  var result = confirm ("Leave meeting? ");
+  if (result) {
+    serverConnection.send(JSON.stringify({ 'displayName': localDisplayName, 'isMute': localIsMute, 'uuid': localUuid, 'room': roomHash, 'dest': "all-close-div" }));
+  }
+  else {
+    window.location = "https://p2p-vid-chat.herokuapp.com";
+  }
+}
+
+function removeDiv(peerUuid) {
+  delete peerConnections[peerUuid];
+  document.getElementById('videos').removeChild(document.getElementById('remoteVideo_' + peerUuid));
 }

@@ -4,7 +4,8 @@
 }
 
 body {
-    background: black;
+    background: #ECEFF1;
+    padding-top: 6.5vh;
 }
 
 .videos {
@@ -147,9 +148,7 @@ body {
         line-height: 3rem !important;
     }
 }
- body{
-   padding-top: 6.5vh;
- }
+
 
 .navbar{
   height:7vh;

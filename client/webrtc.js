@@ -301,14 +301,23 @@ function flip() {
   constraints.video = {facingMode: frontCam ? 'user' : 'environment'};
   navigator.mediaDevices.getUserMedia(constraints)
       .then(stream => {
-        console.log("local stream");
-        localStream = stream;
+        // console.log("local stream");
+        // localStream = stream;
+        // for (var peer in peerConnections) {
+        //   localStream.getTracks().forEach(t => {
+        //     peerConnections[peer].pc.addTrack(t, localStream);
+        //   });
+        // }
+        let videoTrack = stream.getVideoTracks()[0];
+        let audioTrack = stream.getAudioTracks()[0];
         for (var peer in peerConnections) {
-          localStream.getTracks().forEach(t => {
-            peerConnections[peer].pc.addTrack(t, localStream);
+          var sender = peerConnections[peer].pc.getSenders().find(function(s) {
+            return s.track.kind == videoTrack.kind;
           });
+          console.log("sender: " + sender);
+          sender.replaceTrack(videoTrack);
         }
-        console.log("stream updated");
+        console.log("track updated");
         localVideo.srcObject = stream;
         localVideo.play();
       }).catch(errorHandler);
@@ -318,19 +327,4 @@ function leaveRoom() {
   if (confirm("Leave meeting?")) {
     window.location = "https://p2p-vid-chat.herokuapp.com";
   }
-}
-
-window.onbeforeunload = function() {
-  var result = confirm ("Leave meeting? ");
-  if (result) {
-    serverConnection.send(JSON.stringify({ 'displayName': localDisplayName, 'isMute': localIsMute, 'uuid': localUuid, 'room': roomHash, 'dest': "all-close-div" }));
-  }
-  else {
-    window.location = "https://p2p-vid-chat.herokuapp.com";
-  }
-}
-
-function removeDiv(peerUuid) {
-  delete peerConnections[peerUuid];
-  document.getElementById('videos').removeChild(document.getElementById('remoteVideo_' + peerUuid));
 }

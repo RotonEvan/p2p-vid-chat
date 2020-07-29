@@ -178,7 +178,7 @@ var count = 0;
 function checkPeerDisconnect(event, peerUuid) {
   var state = peerConnections[peerUuid].pc.iceConnectionState;
   console.log(`connection with peer ${peerUuid} ${state}`);
-  if (state === "failed" || state === "closed" || state === "disconnected") {
+  if (state === "failed" || state === "closed") {
     delete peerConnections[peerUuid];
     document.getElementById('videos').removeChild(document.getElementById('remoteVideo_' + peerUuid));
     updateLayout();

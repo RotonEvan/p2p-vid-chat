@@ -178,19 +178,7 @@ var count = 0;
 function checkPeerDisconnect(event, peerUuid) {
   var state = peerConnections[peerUuid].pc.iceConnectionState;
   console.log(`connection with peer ${peerUuid} ${state}`);
-  // if (state === "failed" || state === "closed" || state === "disconnected") {
-  //   delete peerConnections[peerUuid];
-  //   document.getElementById('videos').removeChild(document.getElementById('remoteVideo_' + peerUuid));
-  //   updateLayout();
-  // }
-  if (state === "failed") {
-    console.log(count);
-    if (peerConnections[peerUuid].pc.restartIce) {
-      peerConnections[peerUuid].pc.restartIce();
-    } else {
-      peerConnections[peerUuid].pc.createOffer({iceRestart: true}).then(description => createdDescription(description, peerUuid)).catch(errorHandler);
-    }
-  } else if (state === "closed") {
+  if (state === "failed" || state === "closed" || state === "disconnected") {
     delete peerConnections[peerUuid];
     document.getElementById('videos').removeChild(document.getElementById('remoteVideo_' + peerUuid));
     updateLayout();

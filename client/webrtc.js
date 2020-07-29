@@ -129,7 +129,7 @@ function setUpPeer(peerUuid, displayName, isMute, initCall = false) {
 
   if (initCall) {
     console.log(`call inititated: ${peerUuid} to ${localUuid}`);
-    peerConnections[peerUuid].pc.createOffer().then(description => createdDescription(description, peerUuid)).catch(errorHandler);
+    peerConnections[peerUuid].pc.createOffer({iceRestart: true}).then(description => createdDescription(description, peerUuid)).catch(errorHandler);
   }
 }
 
@@ -178,6 +178,17 @@ function checkPeerDisconnect(event, peerUuid) {
     document.getElementById('videos').removeChild(document.getElementById('remoteVideo_' + peerUuid));
     updateLayout();
   }
+  // if (state === "failed") {
+  //   if (peerConnections[peerUuid].pc.restartIce) {
+  //     peerConnections[peerUuid].pc.restartIce();
+  //   } else {
+  //     peerConnections[peerUuid].pc.createOffer({iceRestart: true}).then(description => createdDescription(description, peerUuid)).catch(errorHandler);
+  //   }
+  // } else if (state === "closed") {
+  //   delete peerConnections[peerUuid];
+  //   document.getElementById('videos').removeChild(document.getElementById('remoteVideo_' + peerUuid));
+  //   updateLayout();
+  // }
 }
 
 function updateLayout() {

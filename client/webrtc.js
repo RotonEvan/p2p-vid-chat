@@ -175,7 +175,7 @@ function gotRemoteStream(event, peerUuid) {
   }
 }
 
-var count = 0;
+var numVideos = 0;
 
 function checkPeerDisconnect(event, peerUuid) {
   var state = peerConnections[peerUuid].pc.iceConnectionState;
@@ -191,6 +191,8 @@ function updateLayout() {
   // update CSS grid based on number of diplayed videos
   var rowHeight = '98vh';
   var colWidth = '98vw';
+  var rowHeightMob = '98vh';
+  var colWidthMob = '98vw';
 
   var numVideos = Object.keys(peerConnections).length + 1; // add one to include local video
 
@@ -198,46 +200,64 @@ function updateLayout() {
   {
     var rowHeight = '92vh';
     var colWidth = '99.7vw';
+    var rowHeightMob = '92vh';
+    var colWidthMob = '99.7vw';
   }
   else if(numVideos == 2)
   {
     var rowHeight = '92vh';
     var colWidth = '49.7vw';
+    var rowHeightMob = '46vh';
+    var colWidthMob = '99.7vw';
   }
   else if(numVideos > 2 && numVideos < 5)
   {
     var rowHeight = '45.9vh';
     var colWidth = '49.7vw';
+    var rowHeightMob = '45.9vh';
+    var colWidthMob = '49.7vw';
   }
   else if(numVideos > 4 && numVideos < 7)
   {
     var rowHeight = '45.8vh';
     var colWidth = '33.1vw';
+    var rowHeightMob = '30.9vh';
+    var colWidthMob = '49.7vw';
   }
   else if(numVideos > 6 && numVideos < 10)
   {
     var rowHeight = '30.5vh';
     var colWidth = '33.1vw';
+    var rowHeightMob = '22.9vh';
+    var colWidthMob = '49.7vw';
   }
   else if(numVideos > 9 && numVideos < 13)
   {
     var rowHeight = '30.5vh';
     var colWidth = '24.79vw';
+    var rowHeightMob = '18.5vh';
+    var colWidthMob = '49.7vw';
   }
   else if(numVideos > 12 && numVideos < 17)
   {
     var rowHeight = '22.8vh';
     var colWidth = '24.79vw';
+    var rowHeightMob = '18.5vh';
+    var colWidthMob = '49.7vw';
   }
   else if(numVideos > 16 && numVideos < 21)
   {
     var rowHeight = '22.8vh';
     var colWidth = '19.74vw';
+    var rowHeightMob = '18.5vh';
+    var colWidthMob = '49.7vw';
   }
   else if(numVideos > 20)
   {
     var rowHeight = '22.8vh';
     var colWidth = '16.46vw';
+    var rowHeightMob = '18.5vh';
+    var colWidthMob = '49.7vw';
   }
 
   document.documentElement.style.setProperty(`--rowHeight`, rowHeight);

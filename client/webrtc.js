@@ -267,11 +267,14 @@ function updateLayout() {
     var rowHeightMob = '18.5vh';
     var colWidthMob = '49.7vw';
   }
-
-  document.documentElement.style.setProperty(`--rowHeight`, rowHeight);
-  document.documentElement.style.setProperty(`--colWidth`, colWidth);
-  document.documentElement.style.setProperty(`--rowHeightMob`, rowHeightMob);
-  document.documentElement.style.setProperty(`--colWidthMob`, colWidthMob);
+  if(window.innerWidth<600) {
+    document.documentElement.style.setProperty(`--rowHeight`, rowHeight);
+    document.documentElement.style.setProperty(`--colWidth`, colWidth);
+  }
+    else if(window.innerWidth<600) {
+    document.documentElement.style.setProperty(`--rowHeightMob`, rowHeightMob);
+    document.documentElement.style.setProperty(`--colWidthMob`, colWidthMob);
+  }
 }
 
 function makeLabel(label) {

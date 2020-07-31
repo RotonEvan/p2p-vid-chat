@@ -188,13 +188,11 @@ body {
 }
 .copy-button{
   background-color:#f2f2f2;
-  margin-left: -0px;
   border-radius: 30px 30px 30px 30px;
-  box-shadow:3px;
   padding: 8px 10px 8px 10px;
   border: none;
-  margin: 0px 0px 10px 0px;
-  border: 0;
+  display:inline-block;
+  margin: 10px 10px 10px 10px;
   -webkit-appearance: none;
   font-size: 14px !important;
   cursor: pointer;

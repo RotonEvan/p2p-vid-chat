@@ -38,27 +38,10 @@ function start() {
 
   // specify no audio for user media
   constraints = {
-    // video: {
-    //   width: {max: 320},
-    //   height: {max: 240},
-    //   frameRate: {max: 20},
-    //   // facingMode: frontCam ? 'user' : 'environment',
-    //   // facingMode: 'user',
-    //   // facingMode: 'environment',
-    // },
-    // audio: {
-    //   googEchoCancellation: true,
-    //   googAutoGainControl: true,
-    //   googNoiseSuppression: true,
-    //   googHighpassFilter: true,
-    //   googEchoCancellation2: true,
-    //   googAutoGainControl2: true,
-    //   googNoiseSuppression2: true,
-    // },
     video: {
       width: {ideal: 320},
       height: {ideal: 240},
-      frameRate: {min: 1, max: 20}
+      frameRate: {ideal: 20}
     },
     audio: {
       googEchoCancellation: true,
@@ -69,6 +52,8 @@ function start() {
       googAutoGainControl2: true,
       googNoiseSuppression2: true
     }
+    // video: true,
+    // audio: true
   };
 
   // set up local video stream
@@ -131,6 +116,9 @@ function gotMessageFromServer(message) {
   } else if (signal.dest == 'all-audio-change' && peerRoom == roomHash) {
     console.log("audio state change for peer : " + peerUuid);
     changeAudioLabel(peerUuid);
+  } else if (signal.dest == 'all-close-div' && peerRoom == roomHash) {
+    console.log("removing video div of peer : " + peerUuid);
+    removeDiv(peerUuid);
   }
 }
 
@@ -146,7 +134,7 @@ function setUpPeer(peerUuid, displayName, isMute, initCall = false) {
 
   if (initCall) {
     console.log(`call inititated: ${peerUuid} to ${localUuid}`);
-    peerConnections[peerUuid].pc.createOffer().then(description => createdDescription(description, peerUuid)).catch(errorHandler);
+    peerConnections[peerUuid].pc.createOffer({iceRestart: true}).then(description => createdDescription(description, peerUuid)).catch(errorHandler);
   }
 }
 
@@ -187,10 +175,12 @@ function gotRemoteStream(event, peerUuid) {
   }
 }
 
+var count = 0;
+
 function checkPeerDisconnect(event, peerUuid) {
   var state = peerConnections[peerUuid].pc.iceConnectionState;
   console.log(`connection with peer ${peerUuid} ${state}`);
-  if (state === "failed" || state === "closed" || state === "disconnected") {
+  if (state === "failed" || state === "closed") {
     delete peerConnections[peerUuid];
     document.getElementById('videos').removeChild(document.getElementById('remoteVideo_' + peerUuid));
     updateLayout();
@@ -327,14 +317,23 @@ function flip() {
   constraints.video = {facingMode: frontCam ? 'user' : 'environment'};
   navigator.mediaDevices.getUserMedia(constraints)
       .then(stream => {
-        console.log("local stream");
-        localStream = stream;
+        // console.log("local stream");
+        // localStream = stream;
+        // for (var peer in peerConnections) {
+        //   localStream.getTracks().forEach(t => {
+        //     peerConnections[peer].pc.addTrack(t, localStream);
+        //   });
+        // }
+        let videoTrack = stream.getVideoTracks()[0];
+        let audioTrack = stream.getAudioTracks()[0];
         for (var peer in peerConnections) {
-          localStream.getTracks().forEach(t => {
-            peerConnections[peer].pc.addTrack(t, localStream);
+          var sender = peerConnections[peer].pc.getSenders().find(function(s) {
+            return s.track.kind == videoTrack.kind;
           });
+          console.log("sender: " + sender);
+          sender.replaceTrack(videoTrack);
         }
-        console.log("stream updated");
+        console.log("track updated");
         localVideo.srcObject = stream;
         localVideo.play();
       }).catch(errorHandler);

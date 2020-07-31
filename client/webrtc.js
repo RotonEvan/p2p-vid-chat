@@ -204,39 +204,74 @@ function updateLayout() {
 
   var numVideos = Object.keys(peerConnections).length + 1; // add one to include local video
 
-  if(numVideos == 1)
+  if(count == 1)
   {
-    var rowHeight = '90vh';
-    var colWidth = '98vw';
+    var rowHeight = '92vh';
+    var colWidth = '99.7vw';
+    var rowHeightMob = '92vh';
+    var colWidthMob = '99.7vw';
   }
-  else if(numVideos == 2)
+  else if(count == 2)
   {
-    var rowHeight = '90vh';
-    var colWidth = '48vw';
+    var rowHeight = '92vh';
+    var colWidth = '49.7vw';
+    var rowHeightMob = '46vh';
+    var colWidthMob = '99.7vw';
   }
-  else if(numVideos > 2 && numVideos < 5)
+  else if(count > 2 && count < 5)
   {
-    var rowHeight = '46vh';
-    var colWidth = '48vw';
+    var rowHeight = '45.9vh';
+    var colWidth = '49.7vw';
+    var rowHeightMob = '45.9vh';
+    var colWidthMob = '49.7vw';
   }
-  else if(numVideos >=5 && numVideos < 7)
+  else if(count > 4 && count < 7)
   {
-    var rowHeight = '44vh';
-    var colWidth = '31.9vw';
+    var rowHeight = '45.8vh';
+    var colWidth = '33.1vw';
+    var rowHeightMob = '30.9vh';
+    var colWidthMob = '49.7vw';
   }
-  else if(numVideos >6 && numVideos < 10)
+  else if(count > 6 && count < 10)
   {
-    var rowHeight = '29vh';
-    var colWidth = '31.9vw';
+    var rowHeight = '30.5vh';
+    var colWidth = '33.1vw';
+    var rowHeightMob = '22.9vh';
+    var colWidthMob = '49.7vw';
   }
-  else if(numVideos >9 && numVideos < 13)
+  else if(count > 9 && count < 13)
   {
-    var rowHeight = '29vh';
-    var colWidth = '23.7vw';
+    var rowHeight = '30.5vh';
+    var colWidth = '24.79vw';
+    var rowHeightMob = '18.5vh';
+    var colWidthMob = '49.7vw';
+  }
+  else if(count > 12 && count < 17)
+  {
+    var rowHeight = '22.8vh';
+    var colWidth = '24.79vw';
+    var rowHeightMob = '18.5vh';
+    var colWidthMob = '49.7vw';
+  }
+  else if(count > 16 && count < 21)
+  {
+    var rowHeight = '22.8vh';
+    var colWidth = '19.74vw';
+    var rowHeightMob = '18.5vh';
+    var colWidthMob = '49.7vw';
+  }
+  else if(count > 20)
+  {
+    var rowHeight = '22.8vh';
+    var colWidth = '16.46vw';
+    var rowHeightMob = '18.5vh';
+    var colWidthMob = '49.7vw';
   }
 
   document.documentElement.style.setProperty(`--rowHeight`, rowHeight);
   document.documentElement.style.setProperty(`--colWidth`, colWidth);
+  document.documentElement.style.setProperty(`--rowHeightMob`, rowHeightMob);
+  document.documentElement.style.setProperty(`--colWidthMob`, colWidthMob);
 }
 
 function makeLabel(label) {

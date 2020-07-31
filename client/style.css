@@ -1,8 +1,6 @@
 :root {
-    --rowHeight: 92vh;
+    --rowHeight: 98vh;
     --colWidth: 98vw;
-    --rowHeightMob: 92vh;
-    --colWidthMob: 98vw;
 }
 
 body {
@@ -25,18 +23,6 @@ body {
     -webkit-transform:rotateY(180deg); /* Safari and Chrome */
     -moz-transform:rotateY(180deg); /* Firefox */
 }
-
-
-@media only screen and (max-width: 600px) {
-  .videoContainer{
-    position: relative;
-    overflow: hidden;
-    height: 92vh;
-    min-height: var(--rowHeightMob);
-    min-width: var(--colWidthMob);
-  }
-}
-
 .videoContainer {
     position: relative;
     overflow: hidden;

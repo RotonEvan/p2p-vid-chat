@@ -202,7 +202,7 @@ function updateLayout() {
   else if(numVideos == 2)
   {
     var rowHeight = '92vh';
-    var colWidth = '49.7vw';
+    var colWidth = '49vw';
     var rowHeightMob = '46vh';
     var colWidthMob = '99.7vw';
   }
@@ -324,10 +324,10 @@ function toggleCamera() {
   localVideo.srcObject = null;
   if( localStream == null ) return;
   // we need to flip, stop everything
-  localStream.getTracks().forEach(t => {
-    t.stop();
-  });
-  // localStream.getVideoTracks()[0].stop();
+  // localStream.getTracks().forEach(t => {
+  //   t.stop();
+  // });
+  localStream.getVideoTracks()[0].stop();
   frontCam = !(frontCam);
   flip();
 }

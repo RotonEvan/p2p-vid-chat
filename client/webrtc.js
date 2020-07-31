@@ -206,34 +206,50 @@ function updateLayout() {
 
   if(numVideos == 1)
   {
-    var rowHeight = '90vh';
-    var colWidth = '98vw';
+    var rowHeight = '92vh';
+    var colWidth = '99.7vw';
   }
   else if(numVideos == 2)
   {
-    var rowHeight = '90vh';
-    var colWidth = '48vw';
+    var rowHeight = '92vh';
+    var colWidth = '49.7vw';
   }
   else if(numVideos > 2 && numVideos < 5)
   {
-    var rowHeight = '44vh';
-    var colWidth = '48vw';
+    var rowHeight = '45.9vh';
+    var colWidth = '49.7vw';
   }
-  else if(numVideos >=5 && numVideos < 7)
+  else if(numVideos > 4 && numVideos < 7)
   {
-    var rowHeight = '44vh';
-    var colWidth = '31.9vw';
+    var rowHeight = '45.8vh';
+    var colWidth = '33.1vw';
   }
-  else if(numVideos >6 && numVideos < 10)
+  else if(numVideos > 6 && numVideos < 10)
   {
-    var rowHeight = '29vh';
-    var colWidth = '31.9vw';
+    var rowHeight = '30.5vh';
+    var colWidth = '33.1vw';
   }
-  else if(numVideos >9 && numVideos < 13)
+  else if(numVideos > 9 && numVideos < 13)
   {
-    var rowHeight = '29vh';
-    var colWidth = '23.7vw';
+    var rowHeight = '30.5vh';
+    var colWidth = '24.79vw';
   }
+  else if(numVideos > 12 && numVideos < 17)
+  {
+    var rowHeight = '22.8vh';
+    var colWidth = '24.79vw';
+  }
+  else if(numVideos > 16 && numVideos < 21)
+  {
+    var rowHeight = '22.8vh';
+    var colWidth = '19.74vw';
+  }
+  else if(numVideos > 20)
+  {
+    var rowHeight = '22.8vh';
+    var colWidth = '16.46vw';
+  }
+
   document.documentElement.style.setProperty(`--rowHeight`, rowHeight);
   document.documentElement.style.setProperty(`--colWidth`, colWidth);
 }

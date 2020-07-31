@@ -34,8 +34,8 @@ body {
 
 @media not screen and (max-width: 600px) {
   html{
-    --rowHeightMob: unset;
-    --colWidthMob: unset;
+    --rowHeightMob: unset !important;
+    --colWidthMob: unset !important;
   }
   .videoContainer {
       position: relative;
@@ -46,8 +46,8 @@ body {
 }
 @media only screen and (max-width: 600px) {
   html{
-    --rowHeight: unset;
-    --colWidth: unset;
+    --rowHeight: unset !important;
+    --colWidth: unset !important;
   }
   .videoContainer{
     position: relative;

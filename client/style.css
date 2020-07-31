@@ -26,7 +26,6 @@ body {
 .videoContainer {
     position: relative;
     overflow: hidden;
-    height: 92vh;
     min-height: var(--rowHeight);
     min-width: var(--colWidth);
 

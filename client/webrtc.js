@@ -216,7 +216,7 @@ function updateLayout() {
   }
   else if(numVideos > 2 && numVideos < 5)
   {
-    var rowHeight = '44vh';
+    var rowHeight = '46vh';
     var colWidth = '48vw';
   }
   else if(numVideos >=5 && numVideos < 7)

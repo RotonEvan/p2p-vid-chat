@@ -31,16 +31,16 @@ body {
   .videoContainer{
     position: relative;
     overflow: hidden;
-    height: 92vh;
-    min-height: var(--rowHeightMob);
-    min-width: var(--colWidthMob);
+    /* height: 92vh; */
+    min-height: var(--rowHeightMob) !important;
+    min-width: var(--colWidthMob) !important;
   }
 }
 
 .videoContainer {
     position: relative;
     overflow: hidden;
-    height: 92vh;
+    /* height: 92vh; */
     min-height: var(--rowHeight);
     min-width: var(--colWidth);
 

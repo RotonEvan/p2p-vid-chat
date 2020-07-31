@@ -208,10 +208,10 @@ function updateLayout() {
   }
   else if(numVideos > 2 && numVideos < 5)
   {
-    var rowHeight = '45.9vh';
-    var colWidth = '49.7vw';
-    var rowHeightMob = '45.9vh';
-    var colWidthMob = '49.7vw';
+    var rowHeight = '45vh';
+    var colWidth = '49vw';
+    var rowHeightMob = '45vh';
+    var colWidthMob = '49vw';
   }
   else if(numVideos > 4 && numVideos < 7)
   {

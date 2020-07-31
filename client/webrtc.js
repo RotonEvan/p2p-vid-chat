@@ -175,7 +175,7 @@ function gotRemoteStream(event, peerUuid) {
   }
 }
 
-var numVideos = 0;
+var count = 0;
 
 function checkPeerDisconnect(event, peerUuid) {
   var state = peerConnections[peerUuid].pc.iceConnectionState;

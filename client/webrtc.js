@@ -38,10 +38,27 @@ function start() {
 
   // specify no audio for user media
   constraints = {
+    // video: {
+    //   width: {max: 320},
+    //   height: {max: 240},
+    //   frameRate: {max: 20},
+    //   // facingMode: frontCam ? 'user' : 'environment',
+    //   // facingMode: 'user',
+    //   // facingMode: 'environment',
+    // },
+    // audio: {
+    //   googEchoCancellation: true,
+    //   googAutoGainControl: true,
+    //   googNoiseSuppression: true,
+    //   googHighpassFilter: true,
+    //   googEchoCancellation2: true,
+    //   googAutoGainControl2: true,
+    //   googNoiseSuppression2: true,
+    // },
     video: {
       width: {ideal: 320},
       height: {ideal: 240},
-      frameRate: {ideal: 20}
+      frameRate: {min: 1, max: 20}
     },
     audio: {
       googEchoCancellation: true,
@@ -52,8 +69,6 @@ function start() {
       googAutoGainControl2: true,
       googNoiseSuppression2: true
     }
-    // video: true,
-    // audio: true
   };
 
   // set up local video stream
@@ -116,9 +131,6 @@ function gotMessageFromServer(message) {
   } else if (signal.dest == 'all-audio-change' && peerRoom == roomHash) {
     console.log("audio state change for peer : " + peerUuid);
     changeAudioLabel(peerUuid);
-  } else if (signal.dest == 'all-close-div' && peerRoom == roomHash) {
-    console.log("removing video div of peer : " + peerUuid);
-    removeDiv(peerUuid);
   }
 }
 
@@ -134,7 +146,7 @@ function setUpPeer(peerUuid, displayName, isMute, initCall = false) {
 
   if (initCall) {
     console.log(`call inititated: ${peerUuid} to ${localUuid}`);
-    peerConnections[peerUuid].pc.createOffer({iceRestart: true}).then(description => createdDescription(description, peerUuid)).catch(errorHandler);
+    peerConnections[peerUuid].pc.createOffer().then(description => createdDescription(description, peerUuid)).catch(errorHandler);
   }
 }
 
@@ -175,12 +187,10 @@ function gotRemoteStream(event, peerUuid) {
   }
 }
 
-var count = 0;
-
 function checkPeerDisconnect(event, peerUuid) {
   var state = peerConnections[peerUuid].pc.iceConnectionState;
   console.log(`connection with peer ${peerUuid} ${state}`);
-  if (state === "failed" || state === "closed") {
+  if (state === "failed" || state === "closed" || state === "disconnected") {
     delete peerConnections[peerUuid];
     document.getElementById('videos').removeChild(document.getElementById('remoteVideo_' + peerUuid));
     updateLayout();
@@ -191,56 +201,50 @@ function updateLayout() {
   // update CSS grid based on number of diplayed videos
   var rowHeight = '98vh';
   var colWidth = '98vw';
-  var rowHeightMob = '98vh';
-  var colWidthMob = '98vw';
 
   var numVideos = Object.keys(peerConnections).length + 1; // add one to include local video
 
-  if(numVideos == 1)
+  if(count == 1)
   {
     var rowHeight = '92vh';
     var colWidth = '99.7vw';
-    var rowHeightMob = '92vh';
-    var colWidthMob = '98vw';
   }
-  else if(numVideos == 2)
+  else if(count == 2)
   {
     var rowHeight = '92vh';
     var colWidth = '49.7vw';
-    var rowHeightMob = '46vh';
-    var colWidthMob = '98vw';
   }
-  else if(numVideos > 2 && numVideos < 5)
+  else if(count > 2 && count < 5)
   {
     var rowHeight = '45.9vh';
     var colWidth = '49.7vw';
   }
-  else if(numVideos > 4 && numVideos < 7)
+  else if(count > 4 && count < 7)
   {
     var rowHeight = '45.8vh';
     var colWidth = '33.1vw';
   }
-  else if(numVideos > 6 && numVideos < 10)
+  else if(count > 6 && count < 10)
   {
     var rowHeight = '30.5vh';
     var colWidth = '33.1vw';
   }
-  else if(numVideos > 9 && numVideos < 13)
+  else if(count > 9 && count < 13)
   {
     var rowHeight = '30.5vh';
     var colWidth = '24.79vw';
   }
-  else if(numVideos > 12 && numVideos < 17)
+  else if(count > 12 && count < 17)
   {
     var rowHeight = '22.8vh';
     var colWidth = '24.79vw';
   }
-  else if(numVideos > 16 && numVideos < 21)
+  else if(count > 16 && count < 21)
   {
     var rowHeight = '22.8vh';
     var colWidth = '19.74vw';
   }
-  else if(numVideos > 20)
+  else if(count > 20)
   {
     var rowHeight = '22.8vh';
     var colWidth = '16.46vw';
@@ -323,23 +327,14 @@ function flip() {
   constraints.video = {facingMode: frontCam ? 'user' : 'environment'};
   navigator.mediaDevices.getUserMedia(constraints)
       .then(stream => {
-        // console.log("local stream");
-        // localStream = stream;
-        // for (var peer in peerConnections) {
-        //   localStream.getTracks().forEach(t => {
-        //     peerConnections[peer].pc.addTrack(t, localStream);
-        //   });
-        // }
-        let videoTrack = stream.getVideoTracks()[0];
-        let audioTrack = stream.getAudioTracks()[0];
+        console.log("local stream");
+        localStream = stream;
         for (var peer in peerConnections) {
-          var sender = peerConnections[peer].pc.getSenders().find(function(s) {
-            return s.track.kind == videoTrack.kind;
+          localStream.getTracks().forEach(t => {
+            peerConnections[peer].pc.addTrack(t, localStream);
           });
-          console.log("sender: " + sender);
-          sender.replaceTrack(videoTrack);
         }
-        console.log("track updated");
+        console.log("stream updated");
         localVideo.srcObject = stream;
         localVideo.play();
       }).catch(errorHandler);

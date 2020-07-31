@@ -1,11 +1,11 @@
 :root {
-    --rowHeight: 98vh;
+    --rowHeight: 92vh;
     --colWidth: 98vw;
 }
 
 body {
     background: #ECEFF1;
-    padding-top: 6.5vh;
+    margin:0px;
 }
 
 .videos {
@@ -26,7 +26,7 @@ body {
 .videoContainer {
     position: relative;
     overflow: hidden;
-
+    height: 92vh;
     min-height: var(--rowHeight);
     min-width: var(--colWidth);
 

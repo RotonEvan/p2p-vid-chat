@@ -189,10 +189,6 @@ function checkPeerDisconnect(event, peerUuid) {
 
 function updateLayout() {
   // update CSS grid based on number of diplayed videos
-  var rowHeight = '98vh';
-  var colWidth = '98vw';
-  var rowHeightMob = '98vh';
-  var colWidthMob = '98vw';
 
   var numVideos = Object.keys(peerConnections).length + 1; // add one to include local video
 
@@ -262,6 +258,8 @@ function updateLayout() {
 
   document.documentElement.style.setProperty(`--rowHeight`, rowHeight);
   document.documentElement.style.setProperty(`--colWidth`, colWidth);
+  document.documentElement.style.setProperty(`--rowHeightMob`, rowHeightMob);
+  document.documentElement.style.setProperty(`--colWidthMob`, colWidthMob);
 }
 
 function makeLabel(label) {

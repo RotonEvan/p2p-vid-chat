@@ -33,6 +33,10 @@ body {
 } */
 
 @media not screen and (max-width: 600px) {
+  html{
+    --rowHeightMob: unset;
+    --colWidthMob: unset;
+  }
   .videoContainer {
       position: relative;
       overflow: hidden;
@@ -41,6 +45,10 @@ body {
   }
 }
 @media only screen and (max-width: 600px) {
+  html{
+    --rowHeight: unset;
+    --colWidth: unset;
+  }
   .videoContainer{
     position: relative;
     overflow: hidden;

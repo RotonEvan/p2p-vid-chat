@@ -40,8 +40,8 @@ body {
   .videoContainer {
       position: relative;
       overflow: hidden;
-      min-height: var(--rowHeight);
-      min-width: var(--colWidth);
+      height: var(--rowHeight);
+      width: var(--colWidth);
   }
 }
 @media only screen and (max-width: 600px) {
@@ -52,8 +52,8 @@ body {
   .videoContainer{
     position: relative;
     overflow: hidden;
-    min-height: var(--rowHeightMob);
-    min-width: var(--colWidthMob);
+    height: var(--rowHeightMob);
+    width: var(--colWidthMob);
   }
 }
 

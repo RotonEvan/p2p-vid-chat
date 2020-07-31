@@ -223,49 +223,49 @@ function updateLayout() {
     var rowHeight = '45.9vh';
     var colWidth = '49vw';
     var rowHeightMob = '45.9vh';
-    var colWidthMob = '49.7vw';
+    var colWidthMob = '49vw';
   }
   else if(numVideos > 4 && numVideos < 7)
   {
     var rowHeight = '45.8vh';
     var colWidth = '33.1vw';
     var rowHeightMob = '30.9vh';
-    var colWidthMob = '49.7vw';
+    var colWidthMob = '49vw';
   }
   else if(numVideos > 6 && numVideos < 10)
   {
     var rowHeight = '30.5vh';
     var colWidth = '33.1vw';
     var rowHeightMob = '22.9vh';
-    var colWidthMob = '49.7vw';
+    var colWidthMob = '49vw';
   }
   else if(numVideos > 9 && numVideos < 13)
   {
     var rowHeight = '30.5vh';
     var colWidth = '24.79vw';
     var rowHeightMob = '18.5vh';
-    var colWidthMob = '49.7vw';
+    var colWidthMob = '49vw';
   }
   else if(numVideos > 12 && numVideos < 17)
   {
     var rowHeight = '22.8vh';
     var colWidth = '24.79vw';
     var rowHeightMob = '18.5vh';
-    var colWidthMob = '49.7vw';
+    var colWidthMob = '49vw';
   }
   else if(numVideos > 16 && numVideos < 21)
   {
     var rowHeight = '22.8vh';
     var colWidth = '19.74vw';
     var rowHeightMob = '18.5vh';
-    var colWidthMob = '49.7vw';
+    var colWidthMob = '49vw';
   }
   else if(numVideos > 20)
   {
     var rowHeight = '22.8vh';
     var colWidth = '16.46vw';
     var rowHeightMob = '18.5vh';
-    var colWidthMob = '49.7vw';
+    var colWidthMob = '49vw';
   }
     document.documentElement.style.setProperty(`--rowHeight`, rowHeight);
     document.documentElement.style.setProperty(`--colWidth`, colWidth);

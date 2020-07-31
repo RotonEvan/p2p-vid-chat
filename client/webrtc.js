@@ -220,9 +220,9 @@ function updateLayout() {
   }
   else if(numVideos > 2 && numVideos < 5)
   {
-    var rowHeight = '45.9vh';
+    var rowHeight = '45vh';
     var colWidth = '49vw';
-    var rowHeightMob = '45.9vh';
+    var rowHeightMob = '45vh';
     var colWidthMob = '49vw';
   }
   else if(numVideos > 4 && numVideos < 7)
@@ -336,15 +336,29 @@ function toggleCamera() {
   localVideo.srcObject = null;
   if( localStream == null ) return;
   // we need to flip, stop everything
-  localStream.getTracks().forEach(t => {
-    t.stop();
-  });
+  // localStream.getTracks().forEach(t => {
+  //   t.stop();
+  // });
+  localStream.getVideoTracks()[0].stop();
   frontCam = !(frontCam);
   flip();
 }
 
 function flip() {
-  constraints.video = {facingMode: frontCam ? 'user' : 'environment'};
+  if (frontCam) {
+    constraints.video = {
+      width: {ideal: 320},
+      height: {ideal: 240},
+      frameRate: {ideal: 20}
+    };
+  } else {
+    constraints.video = {
+      width: {ideal: 320},
+      height: {ideal: 240},
+      frameRate: {ideal: 20},
+      facingMode: "environment"
+    };
+  }
   navigator.mediaDevices.getUserMedia(constraints)
       .then(stream => {
         console.log("local stream");
@@ -353,6 +367,9 @@ function flip() {
           localStream.getTracks().forEach(t => {
             peerConnections[peer].pc.addTrack(t, localStream);
           });
+          console.log("sender: " + sender);
+          sender.replaceTrack(videoTrack);
+          sender.replaceTrack(audioTrack);
         }
         console.log("stream updated");
         localVideo.srcObject = stream;

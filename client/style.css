@@ -1,6 +1,8 @@
 :root {
     --rowHeight: 92vh;
     --colWidth: 98vw;
+    --rowHeightMob: 92vh;
+    --colWidthMob: 98vw;
 }
 
 body {

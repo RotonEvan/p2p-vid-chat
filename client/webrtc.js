@@ -293,12 +293,26 @@ function toggleCamera() {
   localStream.getTracks().forEach(t => {
     t.stop();
   });
+  // localStream.getVideoTracks()[0].stop();
   frontCam = !(frontCam);
   flip();
 }
 
 function flip() {
-  constraints.video = {facingMode: frontCam ? 'user' : 'environment'};
+  if (frontCam) {
+    constraints.video = {
+      width: {ideal: 320},
+      height: {ideal: 240},
+      frameRate: {ideal: 20}
+    };
+  } else {
+    constraints.video = {
+      width: {ideal: 320},
+      height: {ideal: 240},
+      frameRate: {ideal: 20},
+      facingMode: "environment"
+    };
+  }
   navigator.mediaDevices.getUserMedia(constraints)
       .then(stream => {
         // console.log("local stream");
@@ -316,6 +330,7 @@ function flip() {
           });
           console.log("sender: " + sender);
           sender.replaceTrack(videoTrack);
+          sender.replaceTrack(audioTrack);
         }
         console.log("track updated");
         localVideo.srcObject = stream;

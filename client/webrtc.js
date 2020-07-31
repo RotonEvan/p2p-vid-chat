@@ -267,7 +267,7 @@ function updateLayout() {
     var rowHeightMob = '18.5vh';
     var colWidthMob = '49.7vw';
   }
-  if(window.innerWidth<600) {
+  if(window.innerWidth>600) {
     document.documentElement.style.setProperty(`--rowHeight`, rowHeight);
     document.documentElement.style.setProperty(`--colWidth`, colWidth);
   }

@@ -33,7 +33,7 @@ body {
 } */
 
 @media not screen and (max-width: 600px) {
-  element{
+  html{
     --rowHeightMob: unset !important;
     --colWidthMob: unset !important;
   }
@@ -45,7 +45,7 @@ body {
   }
 }
 @media only screen and (max-width: 600px) {
-  element{
+  html{
     --rowHeight: unset !important;
     --colWidth: unset !important;
   }

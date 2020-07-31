@@ -32,8 +32,8 @@ body {
     position: relative;
     overflow: hidden;
     height: 92vh;
-    height: var(--rowHeightMob);
-    width: var(--colWidthMob);
+    min-height: var(--rowHeightMob);
+    min-width: var(--colWidthMob);
   }
 }
 

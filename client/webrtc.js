@@ -56,8 +56,8 @@ function start() {
     //   googNoiseSuppression2: true,
     // },
     video: {
-      width: {ideal: 320},
-      height: {ideal: 240},
+      width: {ideal: 72},
+      height: {ideal: 48},
       frameRate: {ideal: 20}
     },
     audio: {

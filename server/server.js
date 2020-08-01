@@ -142,8 +142,7 @@ wss.broadcast = function (data) {
   });
 };
 
-console.log('Server running.'
-);
+console.log('Server running.');
 
 // ----------------------------------------------------------------------------------------
 

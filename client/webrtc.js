@@ -58,7 +58,7 @@ function start() {
     video: {
       width: {ideal: 320},
       height: {ideal: 240},
-      frameRate: {min: 1, max: 20}
+      frameRate: {ideal: 20}
     },
     audio: {
       googEchoCancellation: true,

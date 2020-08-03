@@ -146,7 +146,7 @@ function setUpPeer(peerUuid, displayName, isMute, initCall = false) {
 
   if (initCall) {
     console.log(`call inititated: ${peerUuid} to ${localUuid}`);
-    peerConnections[peerUuid].pc.createOffer().then(description => createdDescription(description, peerUuid)).catch(errorHandler);
+    peerConnections[peerUuid].pc.createOffer({iceRestart: true}).then(description => createdDescription(description, peerUuid)).catch(errorHandler);
   }
 }
 
@@ -190,7 +190,7 @@ function gotRemoteStream(event, peerUuid) {
 function checkPeerDisconnect(event, peerUuid) {
   var state = peerConnections[peerUuid].pc.iceConnectionState;
   console.log(`connection with peer ${peerUuid} ${state}`);
-  if (state === "failed" || state === "closed" || state === "disconnected") {
+  if (state === "failed" || state === "closed") {
     delete peerConnections[peerUuid];
     document.getElementById('videos').removeChild(document.getElementById('remoteVideo_' + peerUuid));
     updateLayout();

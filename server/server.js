@@ -6,6 +6,7 @@ const http = require('http');
 const https = require('https');
 // based on examples at https://www.npmjs.com/package/ws
 const WebSocket = require('ws');
+const { default: ClientList } = require('./ClientList');
 
 // Yes, TLS is required
 const serverConfig = {
@@ -116,9 +117,33 @@ const wss = new WebSocket.Server({server: httpsServer});
 
 // Create a server for handling websocket calls
 // const wss = new WebSocketServer({ server: httpsServer });
-wss.room = [];
-wss.on('connection', function (ws) {
+rooms = {};
+
+client = {};
+
+wss.on('connection', function (ws, request) {
+
+  var clientID = create_UUID();
+  client[clientID] = ws;
+
   ws.on('message', function (message) {
+    var signal = JSON.parse(message.data);
+    var room = signal.room;
+
+    if(signal.join) {
+      if (!rooms[room]) {
+        rooms[room] = { 'source': signal.uuid, 'list': new ClientList(), 'room': room };
+        rooms[room].list.append(clientID);
+        wss.sendToClient(JSON.stringify({'setID': true, 'id': clientID}), clientID);
+      } else {
+        var newNode = rooms[room].list.append(clientID);
+        wss.sendToClient(JSON.stringify({'setID': true, 'id': clientID, 'prev': newNode.prev.value}), clientID);
+        signal.sender = clientID;
+        wss.sendToClient(JSON.stringify(signal), newNode.prev.value);
+      }
+    } else if (signal.call) {
+      wss.sendToClient(message, signal.dest);
+    }
     // Broadcast any received message to all clients
     console.log('received: %s', message);
     wss.broadcast(message);
@@ -126,6 +151,13 @@ wss.on('connection', function (ws) {
 
   ws.on('error', () => ws.terminate());
 });
+
+wss.sendToClient = function (data, id) {
+  if (client[id].readyState === WebSocket.OPEN) {
+    console.log("sending data to " + id);
+    client[id].send(data);
+  }
+}
 
 setInterval(() => {
   wss.clients.forEach((client) => {
@@ -152,3 +184,13 @@ http.createServer(function (req, res) {
     res.writeHead(301, { "Location": "https://" + req.headers['host'] + req.url });
     res.end();
 }).listen(HTTP_PORT);
+
+function create_UUID(){
+  var dt = new Date().getTime();
+  var uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+      var r = (dt + Math.random()*16)%16 | 0;
+      dt = Math.floor(dt/16);
+      return (c=='x' ? r :(r&0x3|0x8)).toString(16);
+  });
+  return uuid;
+}

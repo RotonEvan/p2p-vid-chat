@@ -1,6 +1,6 @@
-const { default: ClientNode } = require("./ClientNode");
+const ClientNode = require("./ClientNode");
 
-export default class ClientList {
+module.exports = class ClientList {
     constructor () {
         this.head = null;
         this.tail = null;
@@ -14,19 +14,19 @@ export default class ClientList {
             this.head = newNode;
             this.tail = newNode;
     
-            return this;
+            return newNode;
         }
     
         // Attach new node to the end of linked list.
         this.tail.next = newNode;
     
-        // Attach current tail to the new node's previous reference.
-        newNode.previous = this.tail;
+        // Attach current tail to the new node's prev reference.
+        newNode.prev = this.tail;
     
         // Set new node to be the tail of linked list.
         this.tail = newNode;
     
-        return this;
+        return newNode;
     }
 
     delete (value) {
@@ -47,9 +47,9 @@ export default class ClientList {
                 // Set head to second node, which will become new head.
                 this.head = deletedNode.next;
         
-                // Set new head's previous to null.
+                // Set new head's prev to null.
                 if (this.head) {
-                    this.head.previous = null;
+                    this.head.prev = null;
                 }
         
                 // If all the nodes in list has same value that is passed as argument
@@ -61,15 +61,15 @@ export default class ClientList {
                 // If TAIL is going to be deleted...
         
                 // Set tail to second last node, which will become new tail.
-                this.tail = deletedNode.previous;
+                this.tail = deletedNode.prev;
                 this.tail.next = null;
                 } else {
                 // If MIDDLE node is going to be deleted...
-                const previousNode = deletedNode.previous;
+                const prevNode = deletedNode.prev;
                 const nextNode = deletedNode.next;
         
-                previousNode.next = nextNode;
-                nextNode.previous = previousNode;
+                prevNode.next = nextNode;
+                nextNode.prev = prevNode;
                 }
             }
         

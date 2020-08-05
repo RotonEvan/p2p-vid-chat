@@ -1,4 +1,4 @@
-export default class ClientNode {
+module.exports = class ClientNode {
     constructor (value, next = null, prev = null) {
         this.value = value;
         this.next = next;

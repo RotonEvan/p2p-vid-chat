@@ -99,6 +99,7 @@ function start() {
 
 
 function gotMessageFromServer(message) {
+  console.log(message);
   var signal = JSON.parse(message.data);
   var peerUuid = signal.uuid;
   var peerRoom = signal.room;

@@ -20,6 +20,17 @@ var constraints = {};
 
 var hostStream;
 
+var peerConnectionConfig = {
+    mandatory: {
+        offerToReceiveAudio: true,
+        offerToReceiveVideo: true
+    },
+    iceServers: [
+      { 'urls': 'stun:stun.stunprotocol.org:3478' },
+      { 'urls': 'stun:stun.l.google.com:19302' },
+    ]
+};
+
 function start() {
 
     //setting localName
@@ -71,15 +82,19 @@ function receivedMessage(message) {
     if (signal.setID) {
         localUUID = signal.id;
         prevUUID = signal.prev;
+        console.log('prev: ' + prevUUID);
     }
     if (signal.setNext) {
         nextUUID = signal.next;
-        if (isSource) {
-            setUpPeer(nextUUID);
-            serverConnection.send(JSON.stringify({ 'call': true, 'room': roomHash, 'dest': nextUUID, 'from': localUUID }));
-        }
+        console.log('next: ' + nextUUID);
+        
+        console.log('setting up peer ' + nextUUID);
+        setUpPeer(nextUUID);
+        serverConnection.send(JSON.stringify({ 'call': true, 'room': roomHash, 'dest': nextUUID, 'from': localUUID }));
+        
     }
     if (signal.call && signal.dest == localUUID) {
+        console.log('setting up peer ' + signal.from + ' at ' + signal.dest);
         setUpPeer(signal.from, true);
     }
     else if (signal.sdp) {
@@ -88,7 +103,7 @@ function receivedMessage(message) {
         peerConnections[peer].pc.setRemoteDescription(new RTCSessionDescription(signal.sdp)).then(function () {
             // Only create answers in response to offers
             if (signal.sdp.type == 'offer') {
-              peerConnections[peerUuid].pc.createAnswer().then(description => createdDescription(description, peerUuid)).catch(errorHandler);
+              peerConnections[peer].pc.createAnswer().then(description => createdDescription(description, peer)).catch(errorHandler);
             }
         }).catch(errorHandler);
     }
@@ -110,20 +125,22 @@ function setUpPeer(peerUuid, initCall = false) {
         });
         // peerConnections[peerUuid].pc.addStream(localStream);
     }
-    else {
+    else if (hostStream) {
         hostStream.getTracks().forEach(t => {
             peerConnections[peerUuid].pc.addTrack(t, hostStream);
         });
     }
 
     if (initCall) {
-      console.log(`call inititated: ${peerUuid} to ${localUuid}`);
-      peerConnections[peerUuid].pc.createOffer({iceRestart: true}).then(description => createdDescription(description, peerUuid)).catch(errorHandler);
+      console.log(`call inititated: ${localUUID} to ${peerUuid}`);
+      peerConnections[peerUuid].pc.createOffer({iceRestart: true, offerToReceiveAudio: true, offerToReceiveVideo: true}).then(description => createdDescription(description, peerUuid)).catch(errorHandler);
     }
 }
 
 function gotIceCandidate(event, peerUuid) {
+    console.log('onicecandidate triggered')
     if (event.candidate != null) {
+        console.log('sending ice candidate from ' + localUUID + ' to ' + peerUuid);
         serverConnection.send(JSON.stringify({ 'ice': event.candidate, 'uuid': localUUID, 'dest': peerUuid }));
     }
 }
@@ -145,7 +162,7 @@ function gotRemoteStream(event, peerUuid) {
         vidElement.setAttribute('autoplay', '');
         vidElement.setAttribute('muted', '');
         vidElement.srcObject = event.streams[0];
-
+        hostStream = event.streams[0];
         var vidContainer = document.createElement('div');
         vidContainer.setAttribute('id', 'remoteVideo_' + peerUuid);
         vidContainer.setAttribute('class', 'videoContainer');

@@ -6,7 +6,8 @@ const http = require('http');
 const https = require('https');
 // based on examples at https://www.npmjs.com/package/ws
 const WebSocket = require('ws');
-const { default: ClientList } = require('./ClientList');
+const ClientList = require('./ClientList');
+const { sign } = require('crypto');
 
 // Yes, TLS is required
 const serverConfig = {
@@ -21,9 +22,9 @@ const handleRequest = function (request, response) {
   // Render the single client html file for any request the HTTP server receives
   console.log('request received: ' + request.url);
 
- if (request.url === '/webrtc.js') {
+ if (request.url === '/class.js') {
     response.writeHead(200, { 'Content-Type': 'application/javascript' });
-    response.end(fs.readFileSync('client/webrtc.js'));
+    response.end(fs.readFileSync('client/class.js'));
   } else if (request.url === '/font-awesome.min.css') {
     response.writeHead(200, { 'Content-Type': 'text/css' });
     response.end(fs.readFileSync('client/font-awesome.min.css'));
@@ -108,7 +109,7 @@ const handleRequest = function (request, response) {
   }
 };
 
-const httpsServer = http.createServer(serverConfig, handleRequest);
+const httpsServer = https.createServer(serverConfig, handleRequest);
 httpsServer.listen(HTTPS_PORT);
 
 const wss = new WebSocket.Server({server: httpsServer});
@@ -127,25 +128,27 @@ wss.on('connection', function (ws, request) {
   client[clientID] = ws;
 
   ws.on('message', function (message) {
-    var signal = JSON.parse(message.data);
+    console.log(message)
+    var signal = JSON.parse(message);
     var room = signal.room;
 
     if(signal.join) {
       if (!rooms[room]) {
         rooms[room] = { 'source': clientID, 'list': new ClientList(), 'room': room };
-        rooms[room].list.append(clientID);
+        var source = rooms[room].list.append(clientID);
+        console.log(source);
         wss.sendToClient(JSON.stringify({'setSource': true, 'id': clientID}), clientID);
       } else {
         var newNode = rooms[room].list.append(clientID);
+        console.log(newNode);
         wss.sendToClient(JSON.stringify({ 'setID': true, 'id': clientID, 'prev': newNode.prev.value }), clientID);
         wss.sendToClient(JSON.stringify({ 'setNext': true, 'next': clientID }), newNode.prev.value);
       }
-    } else if (signal.call) {
+    } else if (signal.call || signal.sdp || signal.ice) {
       wss.sendToClient(message, signal.dest);
     }
     // Broadcast any received message to all clients
     console.log('received: %s', message);
-    wss.broadcast(message);
   });
 
   ws.on('error', () => ws.terminate());

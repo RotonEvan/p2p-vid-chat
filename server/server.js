@@ -132,14 +132,13 @@ wss.on('connection', function (ws, request) {
 
     if(signal.join) {
       if (!rooms[room]) {
-        rooms[room] = { 'source': signal.uuid, 'list': new ClientList(), 'room': room };
+        rooms[room] = { 'source': clientID, 'list': new ClientList(), 'room': room };
         rooms[room].list.append(clientID);
-        wss.sendToClient(JSON.stringify({'setID': true, 'id': clientID}), clientID);
+        wss.sendToClient(JSON.stringify({'setSource': true, 'id': clientID}), clientID);
       } else {
         var newNode = rooms[room].list.append(clientID);
-        wss.sendToClient(JSON.stringify({'setID': true, 'id': clientID, 'prev': newNode.prev.value}), clientID);
-        signal.sender = clientID;
-        wss.sendToClient(JSON.stringify(signal), newNode.prev.value);
+        wss.sendToClient(JSON.stringify({ 'setID': true, 'id': clientID, 'prev': newNode.prev.value }), clientID);
+        wss.sendToClient(JSON.stringify({ 'setNext': true, 'next': clientID }), newNode.prev.value);
       }
     } else if (signal.call) {
       wss.sendToClient(message, signal.dest);

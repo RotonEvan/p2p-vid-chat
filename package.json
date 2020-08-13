@@ -1,7 +1,7 @@
 {
-  "name": "WebRTC-Example",
+  "name": "fybrrChat",
   "version": "1.0.0",
-  "description": "An 'as simple as it gets' WebRTC example.",
+  "description": "A p2p video calling/conferencing platform",
   "main": "index.js",
   "scripts": {
     "start": "node server/server.js",
@@ -9,17 +9,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/shanet/WebRTC-Example.git"
+    "url": "git+https://github.com/RotonEvan/p2p-vid-chat.git"
   },
   "keywords": [
     "webrtc"
   ],
-  "author": "shane tully",
+  "author": "Roton and Saksham",
   "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/shanet/WebRTC-Example/issues"
-  },
-  "homepage": "https://github.com/shanet/WebRTC-Example#readme",
+  "homepage": "https://p2p-vid-chat.herokuapp.com",
   "dependencies": {
     "bufferutil": "^4.0.1",
     "express": "^4.17.1",

@@ -6,6 +6,7 @@ const http = require('http');
 const https = require('https');
 // based on examples at https://www.npmjs.com/package/ws
 const WebSocket = require('ws');
+const { sign } = require('crypto');
 
 // Yes, TLS is required
 const serverConfig = {
@@ -116,22 +117,63 @@ const wss = new WebSocket.Server({server: httpsServer});
 
 // Create a server for handling websocket calls
 // const wss = new WebSocketServer({ server: httpsServer });
-wss.room = [];
+rooms = {};
+
+client = {};
+
 wss.on('connection', function (ws) {
+
+  var clientID = create_UUID();
+  client[clientID] = ws;
+
   ws.on('message', function (message) {
-    // Broadcast any received message to all clients
     console.log('received: %s', message);
-    wss.broadcast(message);
+    var signal = JSON.parse(message);
+    var room = signal.room;
+
+    if (signal.join) {
+      if (!rooms[room]) {
+        console.log('creating room ' + room);
+        rooms[room] = { 'room': room, 'clients': {} }
+        rooms[room].clients[clientID] = client[clientID];
+        console.log(client[clientID].readyState);
+        wss.sendToClient(JSON.stringify({'setID': true, 'id': clientID}), clientID);
+      }
+      else {
+        wss.sendToClient(JSON.stringify({'setID': true, 'id': clientID}), clientID);
+      }
+    }
+
+    if (signal.dest == 'all' || signal.dest == 'all-audio-change') {
+      for (var id in rooms[room].clients) {
+        console.log(id);
+        if (signal.uuid == id)  continue;
+        wss.sendToClient(message, id);
+      }
+    }
+    if (signal.call || signal.sdp || signal.ice) {
+      wss.sendToClient(message, signal.dest);
+    }
+
+    // wss.broadcast(message);
   });
 
-  ws.on('error', () => ws.terminate());
+  ws.on('error', () => {
+    ws.terminate();
+    rooms[room].clients.remove(clientID);
+    for (var id in rooms[room].clients) {
+      console.log(id);
+      wss.sendToClient(JSON.stringify({ 'remove': true, 'id': clientID }), id);
+    }
+  });
 });
 
-setInterval(() => {
-  wss.clients.forEach((client) => {
-    client.send(JSON.stringify(new Date().toTimeString()));
-  });
-}, 1000);
+wss.sendToClient = function (data, id) {
+  if (client[id].readyState === WebSocket.OPEN) {
+    console.log("sending data to " + id);
+    client[id].send(data);
+  }
+}
 
 wss.broadcast = function (data) {
   this.clients.forEach(function (client) {
@@ -152,3 +194,28 @@ http.createServer(function (req, res) {
     res.writeHead(301, { "Location": "https://" + req.headers['host'] + req.url });
     res.end();
 }).listen(HTTP_PORT);
+
+setInterval(() => {
+  wss.clients.forEach((client) => {
+    if (client.readyState === WebSocket.OPEN) {
+      client.send(JSON.stringify(new Date().toTimeString()));
+    }
+    else {
+      rooms[room].clients.remove(client);
+      for (var id in rooms[room].clients) {
+        console.log(id);
+        wss.sendToClient(JSON.stringify({ 'remove': true, 'id': client }), id);
+      }
+    }
+  });
+}, 1000);
+
+function create_UUID(){
+  var dt = new Date().getTime();
+  var uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+      var r = (dt + Math.random()*16)%16 | 0;
+      dt = Math.floor(dt/16);
+      return (c=='x' ? r :(r&0x3|0x8)).toString(16);
+  });
+  return uuid;
+}

@@ -108,7 +108,7 @@ const handleRequest = function (request, response) {
   }
 };
 
-const httpsServer = http.createServer(serverConfig, handleRequest);
+const httpsServer = https.createServer(serverConfig, handleRequest);
 httpsServer.listen(HTTPS_PORT);
 
 const wss = new WebSocket.Server({server: httpsServer});
@@ -124,12 +124,13 @@ client = {};
 wss.on('connection', function (ws) {
 
   var clientID = create_UUID();
+  var room;
   client[clientID] = ws;
 
   ws.on('message', function (message) {
     console.log('received: %s', message);
     var signal = JSON.parse(message);
-    var room = signal.room;
+    room = signal.room;
 
     if (signal.join) {
       if (!rooms[room]) {
@@ -140,6 +141,7 @@ wss.on('connection', function (ws) {
         wss.sendToClient(JSON.stringify({'setID': true, 'id': clientID}), clientID);
       }
       else {
+        rooms[room].clients[clientID] = client[clientID];
         wss.sendToClient(JSON.stringify({'setID': true, 'id': clientID}), clientID);
       }
     }
@@ -160,11 +162,6 @@ wss.on('connection', function (ws) {
 
   ws.on('error', () => {
     ws.terminate();
-    rooms[room].clients.remove(clientID);
-    for (var id in rooms[room].clients) {
-      console.log(id);
-      wss.sendToClient(JSON.stringify({ 'remove': true, 'id': clientID }), id);
-    }
   });
 });
 
@@ -199,13 +196,6 @@ setInterval(() => {
   wss.clients.forEach((client) => {
     if (client.readyState === WebSocket.OPEN) {
       client.send(JSON.stringify(new Date().toTimeString()));
-    }
-    else {
-      rooms[room].clients.remove(client);
-      for (var id in rooms[room].clients) {
-        console.log(id);
-        wss.sendToClient(JSON.stringify({ 'remove': true, 'id': client }), id);
-      }
     }
   });
 }, 1000);

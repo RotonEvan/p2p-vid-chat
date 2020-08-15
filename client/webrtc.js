@@ -46,15 +46,6 @@ function start() {
     //   // facingMode: 'user',
     //   // facingMode: 'environment',
     // },
-    // audio: {
-    //   googEchoCancellation: true,
-    //   googAutoGainControl: true,
-    //   googNoiseSuppression: true,
-    //   googHighpassFilter: true,
-    //   googEchoCancellation2: true,
-    //   googAutoGainControl2: true,
-    //   googNoiseSuppression2: true,
-    // },
     video: {
       width: {ideal: 320},
       height: {ideal: 240},
@@ -70,6 +61,10 @@ function start() {
       googNoiseSuppression2: true
     }
   };
+
+
+
+
 
   if (navigator.mediaDevices.getUserMedia) {
     console.log("local video");
@@ -92,7 +87,7 @@ function start() {
   }
   else {
     alert('Your browser does not support getUserMedia API');
-  } 
+  }
 }
 
 
@@ -339,6 +334,109 @@ function toggleVideo() {
   localStream.getVideoTracks()[0].enabled = !(localStream.getVideoTracks()[0].enabled);
   console.log(localStream.getVideoTracks()[0].enabled);
 };
+
+// screenshare-start
+
+var displayMediaStreamConstraints = {
+  video: {
+      mandatory: {
+        chromeMediaSource: 'desktop',
+        maxWidth: 1920,
+        maxHeight: 1080,
+        maxFrameRate: 10,
+        minAspectRatio: 1.77,
+        // chromeMediaSourceId: chrome.desktopCapture.chooseDesktopMedia(),
+      }
+  },
+  audio: true
+}
+
+
+var button           = document.querySelector('#btn-test-getDisplayMedia');
+
+function screenshare() {
+    //this.disabled = true;
+
+    invokeGetDisplayMedia(function(screen) {
+        addStreamStopListener(screen, function() {
+            location.reload();
+        });
+        var video            = document.querySelector('video');
+        video.srcObject = screen;
+
+    }, function(e) {
+        //button.disabled = false;
+
+        var error = {
+            name: e.name || 'UnKnown',
+            message: e.message || 'UnKnown',
+            stack: e.stack || 'UnKnown'
+        };
+
+        if(error.name === 'PermissionDeniedError') {
+            if(location.protocol !== 'https:') {
+                error.message = 'Please use HTTPs.';
+                error.stack   = 'HTTPs is required.';
+            }
+        }
+
+        console.error(error.name);
+        console.error(error.message);
+        console.error(error.stack);
+
+        alert('Unable to capture your screen.\n\n' + error.name + '\n\n' + error.message + '\n\n' + error.stack);
+    });
+};
+
+if(!navigator.getDisplayMedia && !navigator.mediaDevices.getDisplayMedia) {
+    var error = 'Your browser does NOT supports getDisplayMedia API.';
+    document.querySelector('h1').innerHTML = error;
+    document.querySelector('h1').style.color = 'red';
+
+    document.querySelector('video').style.display = 'none';
+    button.style.display = 'none';
+    throw new Error(error);
+}
+
+function invokeGetDisplayMedia(success, error) {
+    var videoConstraints = {};
+
+        videoConstraints.width = 1280;
+        videoConstraints.height = 720;
+
+    var displayMediaStreamConstraints = {
+        video: videoConstraints
+    };
+
+    if(navigator.mediaDevices.getDisplayMedia) {
+        navigator.mediaDevices.getDisplayMedia(displayMediaStreamConstraints).then(success).catch(error);
+    }
+    else {
+        navigator.getDisplayMedia(displayMediaStreamConstraints).then(success).catch(error);
+    }
+}
+
+function addStreamStopListener(stream, callback) {
+    stream.addEventListener('ended', function() {
+        callback();
+        callback = function() {};
+    }, false);
+    stream.addEventListener('inactive', function() {
+        callback();
+        callback = function() {};
+    }, false);
+    stream.getTracks().forEach(function(track) {
+        track.addEventListener('ended', function() {
+            callback();
+            callback = function() {};
+        }, false);
+        track.addEventListener('inactive', function() {
+            callback();
+            callback = function() {};
+        }, false);
+    });
+}
+// screenshare-end
 
 function toggleCamera() {
   localVideo.pause();

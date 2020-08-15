@@ -108,7 +108,7 @@ const handleRequest = function (request, response) {
   }
 };
 
-const httpsServer = http.createServer(serverConfig, handleRequest);
+const httpsServer = https.createServer(serverConfig, handleRequest);
 httpsServer.listen(HTTPS_PORT);
 
 const wss = new WebSocket.Server({server: httpsServer});

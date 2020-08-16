@@ -194,7 +194,7 @@ function gotRemoteStream(event, peerUuid) {
 function checkPeerDisconnect(event, peerUuid) {
   var state = peerConnections[peerUuid].pc.iceConnectionState;
   console.log(`connection with peer ${peerUuid} ${state}`);
-  if (state === "failed" || state === "closed") {
+  if (state === "failed" || state === "closed" || state === "disconnected") {
     delete peerConnections[peerUuid];
     document.getElementById('videos').removeChild(document.getElementById('remoteVideo_' + peerUuid));
     updateLayout();

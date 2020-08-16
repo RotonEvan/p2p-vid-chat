@@ -114,13 +114,13 @@ body {
 /* ui for buttons to be added */
 
 .buttons {
-    position: absolute;
+    position: fixed;
     width: 100%;
     z-index: 9;
     left: 0;
     right: 0;
-    top: 80%;
-    bottom: 0;
+    /* top: 80%; */
+    bottom: 3%;
     margin: auto;
     display: flex;
     flex-wrap: wrap;

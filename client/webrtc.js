@@ -405,7 +405,8 @@ function invokeGetDisplayMedia(success, error) {
         videoConstraints.height = 720;
 
     var displayMediaStreamConstraints = {
-        video: videoConstraints
+        video: videoConstraints,
+        audio: true
     };
 
     if(navigator.mediaDevices.getDisplayMedia) {

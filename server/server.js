@@ -108,7 +108,7 @@ const handleRequest = function (request, response) {
   }
 };
 
-const httpsServer = https.createServer(serverConfig, handleRequest);
+const httpsServer = http.createServer(serverConfig, handleRequest);
 httpsServer.listen(HTTPS_PORT);
 
 const wss = new WebSocket.Server({server: httpsServer});
@@ -188,7 +188,7 @@ console.log('Server running.');
 // Separate server to redirect from http to https
 http.createServer(function (req, res) {
     console.log(req.headers['host']+req.url);
-    res.writeHead(301, { "Location": "http://" + req.headers['host'] + req.url });
+    res.writeHead(301, { "Location": "https://" + req.headers['host'] + req.url });
     res.end();
 }).listen(HTTP_PORT);
 

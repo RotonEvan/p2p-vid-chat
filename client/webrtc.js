@@ -203,8 +203,8 @@ function checkPeerDisconnect(event, peerUuid) {
 
 function updateLayout() {
   // update CSS grid based on number of diplayed videos
-  // var rowHeight = '98vh';
-  // var colWidth = '98vw';
+  var rowHeight = '98vh';
+  var colWidth = '98vw';
 
   var numVideos = Object.keys(peerConnections).length + 1; // add one to include local video
 
@@ -356,12 +356,6 @@ var button           = document.querySelector('#btn-test-getDisplayMedia');
 
 function screenshare() {
     //this.disabled = true;
-    for (var peer in peerConnections) {
-          var sender = peerConnections[peer].pc.getSenders().find(function(s) {
-            return s.track.kind == localStream.getVideoTracks()[0].kind;
-          });
-          console.log("sender: " + sender);
-          sender.replaceTrack(screenshareStream.getVideoTracks()[0]);
 
     invokeGetDisplayMedia(function(screen) {
         addStreamStopListener(screen, function() {
@@ -483,6 +477,7 @@ function flip() {
           });
           console.log("sender: " + sender);
           sender.replaceTrack(videoTrack);
+          sender.replaceTrack(audioTrack);
         }
         console.log("stream updated");
         localVideo.srcObject = stream;

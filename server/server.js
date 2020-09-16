@@ -188,7 +188,7 @@ console.log('Server running.');
 // Separate server to redirect from http to https
 http.createServer(function (req, res) {
     console.log(req.headers['host']+req.url);
-    res.writeHead(301, { "Location": "https://" + req.headers['host'] + req.url });
+    res.writeHead(301, { "Location": "http://" + req.headers['host'] + req.url });
     res.end();
 }).listen(HTTP_PORT);
 

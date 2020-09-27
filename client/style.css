@@ -161,7 +161,7 @@ body {
     background: #e43538;
 }
 
-@media (min-width: 1025px) {
+@media (min-width: 900px) {
     .flip {
         display: none !important;
     }

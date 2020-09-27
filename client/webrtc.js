@@ -59,6 +59,9 @@ function start() {
       googEchoCancellation2: true,
       googAutoGainControl2: true,
       googNoiseSuppression2: true
+    },
+    options: {
+    mirror: true
     }
   };
 
@@ -331,7 +334,35 @@ function toggleAudio() {
 function toggleVideo() {
   document.getElementById('video').classList.toggle('off');
   document.getElementById('video').classList.toggle('on');
-  localStream.getVideoTracks()[0].enabled = !(localStream.getVideoTracks()[0].enabled);
+  if(localStream.getVideoTracks()[0].readyState=="live"){
+    localStream.getVideoTracks()[0].stop()
+  }
+
+  else if (localStream.getVideoTracks()[0].readyState=="ended") {
+
+        navigator.mediaDevices.getUserMedia(constraints)
+            .then(stream => {
+              console.log("local stream");
+              localStream = stream;
+              addStreamStopListener(stream, function() {
+                  location.reload();
+              });
+              for (var peer in peerConnections) {
+                    var sender = peerConnections[peer].pc.getSenders().find(function(s) {
+                      return s.track.kind == localStream.getVideoTracks()[0].kind;
+                    });
+                    console.log("sender: " + sender);
+                    sender.replaceTrack(localStream.getVideoTracks()[0]);}
+                console.log("sender: " + sender);
+
+              console.log(localStream.getVideoTracks()[0].readyState);
+              localVideo = document.getElementById('localVideo');
+              localVideo.srcObject = localStream;
+              localVideo.play();
+            }).catch(errorHandler);
+
+    }
+  //localStream.getVideoTracks()[0].enabled = !(localStream.getVideoTracks()[0].enabled);
   console.log(localStream.getVideoTracks()[0].enabled);
 };
 
@@ -479,14 +510,22 @@ function flip() {
       .then(stream => {
         console.log("local stream");
         localStream = stream;
+        // for (var peer in peerConnections) {
+        //   localStream.getTracks().forEach(t => {
+        //     peerConnections[peer].pc.addTrack(t, localStream);
+        //   });
+        //   console.log("sender: " + sender);
+        //   sender.replaceTrack(videoTrack);
+        //   sender.replaceTrack(audioTrack);
+        // }
+
         for (var peer in peerConnections) {
-          localStream.getTracks().forEach(t => {
-            peerConnections[peer].pc.addTrack(t, localStream);
-          });
-          console.log("sender: " + sender);
-          sender.replaceTrack(videoTrack);
-          sender.replaceTrack(audioTrack);
-        }
+              var sender = peerConnections[peer].pc.getSenders().find(function(s) {
+                return s.track.kind == localStream.getVideoTracks()[0].kind;
+              });
+              console.log("sender: " + sender);
+              sender.replaceTrack(localStream.getVideoTracks()[0]);}
+
         console.log("stream updated");
         localVideo.srcObject = stream;
         localVideo.play();

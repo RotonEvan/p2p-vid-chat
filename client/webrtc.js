@@ -300,6 +300,18 @@ function makeAudioLabel(label) {
   return vidLabel;
 }
 
+// function makeVideoLabel(label) {
+//   var vidLabel = document.createElement('div');
+//   var icon = document.createElement('i');
+//   icon.setAttribute('class', 'fa fa-video-slash');
+//   icon.setAttribute('aria-hidden', 'true');
+//   vidLabel.appendChild(icon);
+//   if (!label) {vidLabel.setAttribute('class', 'videoUnmute');}
+//   else  {vidLabel.setAttribute('class', 'videoMute');};
+//   vidLabel.setAttribute('id', 'videoStatus');
+//   return vidLabel;
+// }
+
 function changeAudioLabel(peerUuid) {
   var vidElement = document.getElementById('remoteVideo_'+peerUuid).children[2];
   vidElement.classList.toggle('audioUnmute');
@@ -533,6 +545,10 @@ function flip() {
 }
 
 function leaveRoom() {
+
+  for (var peer in peerConnections) {
+         peerConnections[peer].pc.close();
+      }
   if (confirm("Leave meeting?")) {
     window.location = "https://p2p-vid-chat.herokuapp.com";
   }

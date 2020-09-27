@@ -403,7 +403,8 @@ function screenshare() {
 
     invokeGetDisplayMedia(function(screen) {
         addStreamStopListener(screen, function() {
-            location.reload();
+            //location.reload();
+            reReplaceVideo();
         });
         var video            = document.querySelector('video');
         video.srcObject = screen;
@@ -446,6 +447,24 @@ function screenshare() {
       button.style.display = 'none';
       throw new Error(error);
   }
+
+};
+function reReplaceVideo(){
+  navigator.mediaDevices.getUserMedia(constraints)
+  .then(stream => {
+    console.log("local stream");
+    localStream = stream;
+    for (var peer in peerConnections) {
+          var sender = peerConnections[peer].pc.getSenders().find(function(s) {
+            return s.track.kind == localStream.getVideoTracks()[0].kind;
+          });
+          console.log("sender: " + sender);
+          sender.replaceTrack(localStream.getVideoTracks()[0]);}
+
+    console.log("stream updated");
+    localVideo.srcObject = stream;
+    localVideo.play();
+  }).catch(errorHandler);
 
 };
 function invokeGetDisplayMedia(success, error) {

@@ -8,3 +8,19 @@
 - ~host user video mirror~
 - mute, video off icons on video stream
 - screenshare
+
+###Pages
+
+- Home screen (index.html)
+  - Start meeting
+  - Enter meeting code
+- "After clicking on start meeting" screen : 
+  - camera, mic permissions
+  - name
+  - password settings ("Secure meeting PIN")
+  - join the call/ask to join
+- Room screen (room.html)
+  - Invite modal
+  - camera/mic device settings
+- "After leaving meeting" screen
+  - Feedback and rating

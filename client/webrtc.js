@@ -192,7 +192,6 @@ function gotRemoteStream(event, peerUuid) {
     document.getElementById('videos').appendChild(vidContainer);
 
     updateLayout();
-
     var repeatInterval = 10000;
     // for (var uuid in peerConnections){
       // console.log(peerConnections[uuid]);

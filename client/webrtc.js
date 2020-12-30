@@ -171,6 +171,57 @@ function createdDescription(description, peerUuid) {
   }).catch(errorHandler);
 }
 
+var peerLogFileData = {};    // key : uuid, value : timestamped log object
+var logFlag = false;
+
+// peerLogFileData = 
+
+// roton-sak : [ 
+//   {t1 : {relavent_data}}
+//   {t2 : {...}}
+// ]
+
+// roton-prashant :
+//   t1 : {...}
+//   t2 : {...}
+
+setInterval(() => {
+  if (logFlag) {
+    var dt = new Date().getTime();
+    peerConnections.forEach(uuid => {
+      if (!(peerLogFileData[uuid])) {
+        peerLogFileData[uuid] = [];
+      }
+      getStats(peerConnections[uuid].pc, function(result) {
+        var relavent_data = {}
+        relavent_data['Audio'] = result.audio;
+        // relavent_data['sendBW'] = result.bandwidth.availableSendBandwidth;
+        // relavent_data['downloadBW'] = result.bandwidth.speed; //In bytes/s
+        relavent_data['Video'] = result.video;
+        relavent_data['BW'] = result.bandwidth;
+        var data = {'timestamp' : dt, 'data' : relavent_data};
+        console.log(data);
+        peerLogFileData[uuid].push(data);
+      });
+    });
+  }
+}, 5000);
+
+function logData(uuid) {
+  var repeatInterval = 10000;
+    // for (var uuid in peerConnections){
+      // console.log(peerConnections[uuid]);
+      getStats(peerConnections[uuid].pc, function(result) {
+        var relavent_data = {}
+        relavent_data['Audio'] = result.audio;
+        // relavent_data['sendBW'] = result.bandwidth.availableSendBandwidth;
+        // relavent_data['downloadBW'] = result.bandwidth.speed; //In bytes/s
+        relavent_data['Video'] = result.video;
+        relavent_data['BW'] = result.bandwidth;
+        console.log(relavent_data);
+      }, repeatInterval);
+}
+
 function gotRemoteStream(event, peerUuid) {
   var videle = document.getElementById('remoteVideo_'+peerUuid);
   if(videle==null)
@@ -192,19 +243,9 @@ function gotRemoteStream(event, peerUuid) {
     document.getElementById('videos').appendChild(vidContainer);
 
     updateLayout();
-    var repeatInterval = 10000;
-    // for (var uuid in peerConnections){
-      // console.log(peerConnections[uuid]);
-      getStats(peerConnections[peerUuid].pc, function(result) {
-        var relavent_data = {}
-        relavent_data['Audio'] = result.audio;
-        // relavent_data['sendBW'] = result.bandwidth.availableSendBandwidth;
-        // relavent_data['downloadBW'] = result.bandwidth.speed; //In bytes/s
-        relavent_data['Video'] = result.video;
-        relavent_data['BW'] = result.bandwidth;
-        console.log(relavent_data);
-      }, repeatInterval);
-    // }
+    if (logFlag == false) {
+      logFlag = true;
+    }
   }
 }
 
@@ -581,7 +622,17 @@ function leaveRoom() {
 
   for (var peer in peerConnections) {
          peerConnections[peer].pc.close();
-      }
+  }
+  logFlag = false;
+  peerLogFiledata.forEach(uuid => {
+    var dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(peerLogFileData[uuid]));
+    var downloadAnchorNode = document.createElement('a');
+    downloadAnchorNode.setAttribute("href",     dataStr);
+    downloadAnchorNode.setAttribute("download", "Peer-" + uuid + ".json");
+    document.body.appendChild(downloadAnchorNode); // required for firefox
+    downloadAnchorNode.click();
+    downloadAnchorNode.remove();
+  });
   if (confirm("Leave meeting?")) {
     window.location = "https://p2p-vid-chat.herokuapp.com";
   }

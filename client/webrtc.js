@@ -4,6 +4,8 @@ if (!location.hash) {
 }
 const roomHash = location.hash.substring(1);
 
+
+
 // const server = require('../server/server');
 
 // const WS_PORT = server.portnumber; //make sure this matches the port for the webscokets server
@@ -64,7 +66,6 @@ function start() {
     mirror: true
     }
   };
-
 
 
 
@@ -191,6 +192,20 @@ function gotRemoteStream(event, peerUuid) {
     document.getElementById('videos').appendChild(vidContainer);
 
     updateLayout();
+
+    var repeatInterval = 10000;
+    // for (var uuid in peerConnections){
+      // console.log(peerConnections[uuid]);
+      getStats(peerConnections[peerUuid].pc, function(result) {
+        var relavent_data = {}
+        relavent_data['Audio'] = result.audio;
+        // relavent_data['sendBW'] = result.bandwidth.availableSendBandwidth;
+        // relavent_data['downloadBW'] = result.bandwidth.speed; //In bytes/s
+        relavent_data['Video'] = result.video;
+        relavent_data['BW'] = result.bandwidth;
+        console.log(relavent_data);
+      }, repeatInterval);
+    // }
   }
 }
 

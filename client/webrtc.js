@@ -195,13 +195,13 @@ setInterval(() => {
           peerLogFileData[uuid] = [];
         }
         getStats(element.pc, function(result) {
-          var relavent_data = {}
-          relavent_data['Audio'] = result.audio;
-          // relavent_data['sendBW'] = result.bandwidth.availableSendBandwidth;
-          // relavent_data['downloadBW'] = result.bandwidth.speed; //In bytes/s
-          relavent_data['Video'] = result.video;
-          relavent_data['BW'] = result.bandwidth;
-          var data = {'timestamp' : dt, 'data' : relavent_data};
+          var relevant_data = {}
+          relevant_data['Audio'] = result.audio;
+          // relevant_data['sendBW'] = result.bandwidth.availableSendBandwidth;
+          // relevant_data['downloadBW'] = result.bandwidth.speed; //In bytes/s
+          relevant_data['Video'] = result.video;
+          relevant_data['BW'] = result.bandwidth;
+          var data = {'timestamp' : dt, 'data' : relevant_data};
           console.log(data);
           peerLogFileData[uuid].push(data);
         });
@@ -246,11 +246,63 @@ function gotRemoteStream(event, peerUuid) {
     document.getElementById('videos').appendChild(vidContainer);
 
     updateLayout();
-    if (logFlag == false) {
-      logFlag = true;
+    // if (logFlag == false) {
+    //   logFlag = true;
+    // }
+    var sender, baselineReport, currentReport;
+
+    sender = peerConnections[peerUuid].pc.getSenders()[0];
+
+    sender.getStats().then(function (report) {
+      baselineReport = report;
+    })
+    .then(function() {
+        return new Promise(function(resolve) {
+            setTimeout(resolve, 10000); // ... wait a bit
+        });
+    })
+    .then(function() {
+        return sender.getStats();
+    })
+    .then(function (report) {
+        currentReport = report;
+        console.log(report);
+        processStats();
+    })
+    .catch(function (error) {
+      console.log(error.toString());
+    });
+
+    function processStats() {
+      // compare the elements from the current report with the baseline
+      for (let now of currentReport.values()) {
+        console.log(now);
+        console.log(now.type);
+          if (now.type != "outbound-rtp")
+              continue;
+    
+          // get the corresponding stats from the baseline report
+          let base = baselineReport.get(now.id);
+          if (base) {
+              remoteNow = currentReport[now.remoteId];
+              remoteBase = baselineReport[base.remoteId];
+
+              console.log(baselineReport);
+    
+              var packetsSent = now.packetsSent - base.packetsSent;
+              var packetsReceived = remoteNow.packetsReceived - remoteBase.packetsReceived;
+    
+              // if intervalFractionLoss is > 0.3, we've probably found the culprit
+              var intervalFractionLoss = (packetsSent - packetsReceived) / packetsSent;
+              console.log(currentReport);
+          }
+      };
     }
+
   }
 }
+
+
 
 function checkPeerDisconnect(event, peerUuid) {
   var state = peerConnections[peerUuid].pc.iceConnectionState;

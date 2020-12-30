@@ -626,6 +626,28 @@ function leaveRoom() {
   for (var peer in peerConnections) {
          peerConnections[peer].pc.close();
   }
+  if (logFlag) {
+    logFlag = false;
+
+    for (const uuid in peerLogFileData) {
+      if (Object.hasOwnProperty.call(peerLogFileData, uuid)) {
+        const element = peerLogFileData[uuid];
+        var dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(element));
+        var downloadAnchorNode = document.createElement('a');
+        downloadAnchorNode.setAttribute("href",     dataStr);
+        downloadAnchorNode.setAttribute("download", "Peer-" + uuid + ".json");
+        document.body.appendChild(downloadAnchorNode); // required for firefox
+        downloadAnchorNode.click();
+        downloadAnchorNode.remove();
+      }
+    }
+  }
+  if (confirm("Leave meeting?")) {
+    window.location = "https://p2p-vid-chat.herokuapp.com";
+  }
+}
+
+function downloadFiles() {
   logFlag = false;
 
   for (const uuid in peerLogFileData) {
@@ -639,8 +661,5 @@ function leaveRoom() {
       downloadAnchorNode.click();
       downloadAnchorNode.remove();
     }
-  }
-  if (confirm("Leave meeting?")) {
-    window.location = "https://p2p-vid-chat.herokuapp.com";
   }
 }

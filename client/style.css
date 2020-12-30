@@ -213,6 +213,7 @@ body {
   margin: 8px 10px 10px 10px;
   padding: 1px 12px 1px 1px !important;
   font-size: 24px !important;
+  rotate: 90;
 }
 .copy-button{
   background-color:#f2f2f2;

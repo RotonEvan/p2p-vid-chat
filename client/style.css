@@ -147,7 +147,7 @@ body {
     transition: .4s;
     bottom: 0;
 }
-@media (min-width: 1024px) {
+@media (min-width: 900px) {
     .buttons a:hover {
         background: #e43538;
     }
@@ -161,17 +161,20 @@ body {
     background: #e43538;
 }
 
-@media (min-width: 1025px) {
+@media (min-width: 900px) {
     .flip {
         display: none !important;
     }
 }
 
-@media (max-width: 1024px) {
+@media (max-width: 900px) {
     .buttons a {
         width: 3rem !important;
         height: 3rem !important;
         line-height: 3rem !important;
+    }
+    .screenshare {
+        display: none !important;
     }
 }
 

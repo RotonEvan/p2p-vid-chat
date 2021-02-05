@@ -22,9 +22,43 @@ var constraints = {};
 
 var peerConnectionConfig = {
   'iceServers': [
-    { 'urls': 'stun:stun.stunprotocol.org:3478' },
-    { 'urls': 'stun:stun.l.google.com:19302' },
-  ]
+        { 'urls': 'stun:stun.l.google.com:19302' },
+        { 'urls': 'stun:stun1.l.google.com:19302' },
+        { 'urls': 'stun:stun2.l.google.com:19302' },
+        // { 'urls': 'stun:stun3.l.google.com:19302' },
+        // { 'urls': 'stun:stun4.l.google.com:19302' },
+        // { 'urls': 'stun:stun.ekiga.net' },
+        // { 'urls': 'stun:stun.ideasip.com' },
+        // { 'urls': 'stun:stun.rixtelecom.se' },
+        // { 'urls': 'stun:stun.schlund.de' },
+        {
+            "url": "stun:global.stun.twilio.com:3478?transport=udp",
+            "urls": "stun:global.stun.twilio.com:3478?transport=udp"
+        },
+        {
+//             "url": "turn:global.turn.twilio.com:3478?transport=udp",
+            "urls": "turn:global.turn.twilio.com:3478",
+            "username": "8816cd659106580c7f06927647882fc738343b66d9c2d154d96e56eb38a8e672",
+            "credential": "cJ38gC3VcZINY6ij073w5IEFfp5PpslJhnKo0UrWQGQ="
+        },
+//           {
+//             "url": "turn:global.turn.twilio.com:3478?transport=tcp",
+//             "username": "4c25833b3b5abb4c9f98e34d591edf5e75ec97703113867a52f4f2d93dfbc087",
+//             "urls": "turn:global.turn.twilio.com:3478?transport=tcp",
+//             "credential": "EUFiUeGErhXy6plXhbcMXmcgArgKo1/dR9H+za30dyg="
+//           },
+        {
+//             "url": "turn:global.turn.twilio.com:443?transport=tcp",
+            "urls": "turn:global.turn.twilio.com:443",
+            "username": "8816cd659106580c7f06927647882fc738343b66d9c2d154d96e56eb38a8e672",
+            "credential": "cJ38gC3VcZINY6ij073w5IEFfp5PpslJhnKo0UrWQGQ="
+        },
+        { 'urls': 'stun:stun.stunprotocol.org:3478' }
+        // { 'urls': 'stun:stun.voiparound.com' },
+        // { 'urls': 'stun:stun.voipbuster.com' },
+        // { 'urls': 'stun:stun.voipstunt.com' },
+        // { 'urls': 'stun:stun.voxgratia.org' }
+    ]
 };
 
 function start() {

@@ -156,6 +156,9 @@ wss.on('connection', function (ws) {
     if (signal.call || signal.sdp || signal.ice) {
       wss.sendToClient(message, signal.dest);
     }
+    if (signal.test) {
+      wss.sendToClient(message, signal.dest);
+    }
 
     // wss.broadcast(message);
   });

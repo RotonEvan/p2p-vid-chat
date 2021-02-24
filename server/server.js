@@ -157,7 +157,7 @@ wss.on('connection', function (ws) {
       wss.sendToClient(message, signal.dest);
     }
     if (signal.test) {
-      wss.sendToClient(message, signal.dest);
+      ws.send(JSON.stringify(new Date().toTimeString()))
     }
 
     // wss.broadcast(message);
